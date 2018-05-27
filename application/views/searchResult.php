@@ -84,7 +84,10 @@
     </form>
     <br>
     <div align="right">
-        Jumlah data: <?=$totalRows?>
+        Jumlah data: <?php echo $totalRows;
+            if($totalRows!=0)
+                {
+        ?>
     </div>
     <table class="table table-striped table-hover">
         <thead>
@@ -202,5 +205,17 @@
         }, false);
     })();
 </script>
-</body>
+
+<?php }else{ ?>
+
+     <p>Jika nama yang Anda cari tidak ada, silahkan daftarkan <a href="<?php echo base_url(); ?>voterManagement/register">disini</a>.</p>
+     </body>
+     <div class="jumbotron">
+    <h5 align="center">Panitia Pemilihan Luar Negeri (PPLN)</h5>
+    <p align="center">6F, No. 550, Rui Guang Road, Neihu District, Taipei, 114, Taiwan, ROC<br>
+        Phone : (02) 87526170<br>
+        Fax : (02) 87523706</p>
+</div>
+<?php } ?>
+
 </html>
