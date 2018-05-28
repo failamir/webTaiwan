@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
+    <!--  meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -56,7 +56,7 @@
             <?php echo $_SESSION['error']; ?>
         </div>
     <?php } ?>
-    <form action="" class="registerForm" method="post" novalidate>
+    <form action="<?php echo base_url().'index.php/voterManagement/register'?>" class="registerForm" method="post" enctype="multipart/form-data">
         <div class="form-group row">
             <div class="col-sm-5"><label for="nik">NIK/Nomor Induk Kependudukan Indonesia (opsional):</label></div>
             <div class="col-sm-7"><input class="form-control" name="nik" id="nik" type="text"></div>
@@ -76,7 +76,7 @@
             <div class="col-sm-7">
                 <input class="form-control" name="fullname" id="fullname" type="text" required>
                 <div class="invalid-feedback">
-                    Mohon masukkan password dengan benar.
+                    Mohon diisi dengan benar.
                 </div>
             </div>
         </div>
@@ -85,7 +85,7 @@
             <div class="col-sm-5"><label for="phone_number">Nomor Telepon:</label></div>
             <div class="col-sm-7"><input class="form-control" name="phone_number" id="phone_number" type="number" required>
             <div class="invalid-feedback">
-                Mohon masukkan ulang password dengan benar.
+                Mohon diisi dengan benar.
             </div>
             </div>
         </div>
@@ -208,7 +208,7 @@
 
         <div class="form-group row">
             <div class="col-sm-5"><label for="photo">Upload foto paspor atau KTP atau ARC untuk verifikasi <br>(tipe file: jpg, png & gif, ukuran: maks 2MB):</label></div>
-            <div class="col-sm-7"><input type="file" name="photo" required></div>
+            <div class="col-sm-7"><input type="file" name="filefoto" required></div>
         </div>
 
         <div class="form-group" id="munculNotif">
@@ -220,7 +220,10 @@
         </div>
 
         <div align="right">
-            <button class="btn btn-primary" name="register">Registrasi</button>
+            <!--
+            <button class="btn btn-primary" name="register" id="btnSubmit" onclick="return recaptchaCallback();" type="submit request">Registrasi</button>
+        -->
+         <button class="btn btn-primary" name="register" id="btnSubmit" type="submit">Registrasi</button>
         </div>
     </form>
 </div>
@@ -267,5 +270,6 @@ if (!googleResponse) {
 }
 }
 </script>
+
 </body>
 </html>

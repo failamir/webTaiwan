@@ -13,6 +13,7 @@ class VoterManagement extends CI_Controller {
         parent::__construct();
         $this->load->library('pagination');
         $this->load->library('recaptcha');
+        $this->load->library('upload');
 //        if (!isset($_SESSION['user_logged'])) {
 //            $this->session->set_flashdata("error", "Harap login terlebih dahulu.");
 //            redirect(base_url()."auth/login", "refresh");
@@ -92,6 +93,14 @@ class VoterManagement extends CI_Controller {
                 $this->load->model("Voter_m");
                 $user = $this->Voter_m->exist($passport_no);
 
+                $recaptcha = $this->input->post('g-recaptcha-response');
+                    //if (!empty($recaptcha)) {
+                    if(true){
+                        $response = $this->recaptcha->verifyResponse($recaptcha);
+                        if(true){
+                        //if (isset($response['success']) and $response['success'] === true) {
+
+
                 //if user exists
                 if (!is_null($user)) {
                     //temporary message
@@ -100,34 +109,65 @@ class VoterManagement extends CI_Controller {
                     //redirect to profile page
                     redirect(base_url()."voterManagement/register","refresh");
                 } else {
-                    $data = array(
-                        'nik' => $_POST['nik'],
-                        'passport_no' => $_POST['passport_no'],
-                        'photo' => $_POST['photo'],
-                        'fullname' => $_POST['fullname'],
-                        'birthdate' => $_POST['birthdate'],
-                        'birthplace' => $_POST['birthplace'],
-                        'phone_number' => $_POST['phone_number'],
-                        'line_id' => $_POST['line_id'],
-                        'email' => $_POST['email'],
-                        'gender' => $_POST['gender'],
-                        'marital_status' => $_POST['marital_status'],
-                        'city' => $_POST['city'],
-                        'address' => $_POST['address'],
-                        'disability_type' => $_POST['disability_type'],
-                        'kpps_type' => $_POST['kpps_type'],
-                        'date_created' => date("Y-m-d h:i:sa")
-                    );
-                    $result = $this->Voter_m->insert($data);
-                    if ($result) {
-                        $this->session->set_flashdata("success", "Registrasi pemilih berhasil!");
-                        redirect(base_url() . "voterManagement/register", "refresh");
-                    } else {
-                        $this->session->set_flashdata("error", "Registrasi gagal!");
-                        redirect(base_url() . "voterManagement/register", "refresh");
+
+                    //untuk ketentuan upload
+                    $config['upload_path'] = './assets/idimages/'; //path folder
+                    $config['allowed_types'] = 'gif|jpg|png|jpeg|bmp'; //type yang dapat diakses bisa anda sesuaikan
+                    $config['encrypt_name'] = TRUE; //nama yang terupload nantinya
+                    $this->upload->initialize($config);
+
+                    if(!empty($_FILES['filefoto']['name']))
+                    {
+                        if ($this->upload->do_upload('filefoto'))
+                            {
+                                $gbr = $this->upload->data();
+                                $gambar=$gbr['file_name']; //Mengambil file name dari gambar yang diupload
+                                //$judul=strip_tags($this->input->post('judul'));
+                                      $data = array(
+                                            'nik' => $_POST['nik'],
+                                            'passport_no' => $_POST['passport_no'],
+                                            'photo' => $gambar,
+                                            'fullname' => $_POST['fullname'],
+                                            'birthdate' => $_POST['birthdate'],
+                                            'birthplace' => $_POST['birthplace'],
+                                            'phone_number' => $_POST['phone_number'],
+                                            'line_id' => $_POST['line_id'],
+                                            'email' => $_POST['email'],
+                                            'gender' => $_POST['gender'],
+                                            'marital_status' => $_POST['marital_status'],
+                                            'city' => $_POST['city'],
+                                            'address' => $_POST['address'],
+                                            'disability_type' => $_POST['disability_type'],
+                                            'kpps_type' => $_POST['kpps_type'],
+                                            'date_created' => date("Y-m-d h:i:sa")
+                                        );
+                                        $result = $this->Voter_m->insert($data);
+                                        if ($result) {
+                                            $this->session->set_flashdata("success", "Registrasi pemilih berhasil!");
+                                            redirect(base_url() . "voterManagement/register", "refresh");
+                                        } else {
+                                            $this->session->set_flashdata("error", "Registrasi gagal!");
+                                            redirect(base_url() . "voterManagement/register", "refresh");
+                                        }
+                         
+                                $this->load->view('v_thanks');
+                            }else{
+                                echo "Gambar Gagal Upload. Gambar harus bertipe gif|jpg|png|jpeg|bmp";
+                            }
+                                  
+                        }else{
+                            echo "Gagal, gambar belum di pilih";
                     }
 
+              
+
                 }
+
+                //close captcha dibawah ini
+                    }
+                }
+
+
             } else {
                  $data = array(
                     'widget' => $this->recaptcha->getWidget(),

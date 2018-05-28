@@ -98,7 +98,7 @@
             <th>Nama Lengkap</th>
             <th>Jenis Kelamin</th>
             <th>Status</th>
-            <th>Edit</th>
+            <th>Verifikasi</th>
         </tr>
         </thead>
         <tbody>
