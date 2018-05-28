@@ -211,6 +211,14 @@
             <div class="col-sm-7"><input type="file" name="photo" required></div>
         </div>
 
+        <div class="form-group" id="munculNotif">
+                    <label for="title" class="col-md-10 text-center">Cek mesin atau bukan</label>
+                    <div class="col-md-10" style="align:center">
+                        <?php echo $widget;?>
+                        <?php echo $script;?>
+                    </div>
+        </div>
+
         <div align="right">
             <button class="btn btn-primary" name="register">Registrasi</button>
         </div>
@@ -249,6 +257,15 @@
         }, false);
     })();
 </script>
-
+<script>
+  function recaptchaCallback() {var googleResponse = jQuery('#g-recaptcha-response').val();
+if (!googleResponse) {
+    $('<p style="color:red !important" class=error-captcha"><span class="glyphicon glyphicon-remove " ></span> Silahkan verifikasi bukan robot / Captcha dulu, centang diatas.</p>" ').insertAfter("#munculNotif");
+    return false;
+} else {            
+    return true;
+}
+}
+</script>
 </body>
 </html>

@@ -12,6 +12,7 @@ class VoterManagement extends CI_Controller {
     {
         parent::__construct();
         $this->load->library('pagination');
+        $this->load->library('recaptcha');
 //        if (!isset($_SESSION['user_logged'])) {
 //            $this->session->set_flashdata("error", "Harap login terlebih dahulu.");
 //            redirect(base_url()."auth/login", "refresh");
@@ -67,6 +68,8 @@ class VoterManagement extends CI_Controller {
                 $data["searchVal"] = $_POST['searchVal'];
                 $data["totalRows"] = $total_row;
 
+
+
 //                $this->load->model("Voter_m");
 //                $data['voters'] = $this->Voter_m->getAllData($name,$passport_no);
 
@@ -81,6 +84,7 @@ class VoterManagement extends CI_Controller {
 
     public function register() {
 //        if (isset($_SESSION['user_logged'])) {
+
             if (isset($_POST['register'])) {
                 $passport_no = $_POST['passport_no'];
 
@@ -125,7 +129,11 @@ class VoterManagement extends CI_Controller {
 
                 }
             } else {
-                $this->load->view('registerVoter');
+                 $data = array(
+                    'widget' => $this->recaptcha->getWidget(),
+                    'script' => $this->recaptcha->getScriptTag(),
+                     );
+                $this->load->view('registerVoter',$data);
             }
 //        } else {
 //            $this->load->view('login');
