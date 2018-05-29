@@ -332,6 +332,18 @@ class Voter_m extends CI_Model {
         }
     }
 
+	public function update($data) {
+		$this->db->where('passport_no', $data['passport_no']);
+		$this->db->update('voters', $data);
+		$updated_status = $this->db->affected_rows();
+
+		if($updated_status):
+			return $data['passport_no'];
+		else:
+			return false;
+		endif;
+	}
+
     public  function getAllData($limit, $page, $name, $passport_no) {
         $this->db->select('*');
         $this->db->from('voters');

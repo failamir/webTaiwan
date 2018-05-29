@@ -79,7 +79,7 @@
         </div>
 
         <div>
-            <button class="btn btn-primary" name="search">Search</button>
+            <button class="btn btn-primary" name="search">Cari</button>
         </div>
     </form>
     <br>
@@ -98,7 +98,7 @@
             <th>Nama Lengkap</th>
             <th>Jenis Kelamin</th>
             <th>Status</th>
-            <th>Verifikasi</th>
+			<th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Edit<?php } ?></th>
         </tr>
         </thead>
         <tbody>
@@ -109,9 +109,10 @@
         <tr align="center">
             <td><?=$a ?></td>
             <td><?=$voter->nik ?></td>
-            <td><?php
+            <td><?php if (!isset($_SESSION['user_logged'])) {
                 $str_end = substr($voter->passport_no,-3);
                 ?><?="****".$str_end?>
+				<?php } else { echo $voter->passport_no; }?>
             </td>
             <td><?=$voter->fullname ?></td>
             <td><?=$voter->gender == "Female" ? "Perempuan" : "Laki-laki"?></td>
@@ -119,7 +120,7 @@
             <td><?php if (isset($_SESSION['user_logged'])) {?>
 					<a href="#">Verifikasi</a>
 				<?php } else { ?>
-					<a href="#" data-toggle="modal" data-target="#myModal" data-userid="<?= md5($voter->passport_no); ?>">Edit</a>
+					<a href="#" data-toggle="modal" data-target="#confirmModal" data-userid="<?= md5($voter->passport_no); ?>">Edit</a>
 				<?php } ?>
 			</td>
         </tr>
@@ -135,7 +136,7 @@
             <th>Nama Lengkap</th>
             <th>Jenis Kelamin</th>
             <th>Status</th>
-            <th>Verifikasi</th>
+            <th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Edit<?php } ?></th>
         </tr>
         </thead>
     </table>
@@ -158,7 +159,7 @@
 </div>
 
 <!-- The Modal -->
-<div class="modal fade" id="myModal">
+<div class="modal fade" id="confirmModal">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -214,7 +215,7 @@
             });
         }, false);
 
-		$('#myModal').on('show.bs.modal', function(e) {
+		$('#confirmModal').on('show.bs.modal', function(e) {
 			$('#errorModal').css('display','none');
 			var userid = $(e.relatedTarget).data('userid');
 
