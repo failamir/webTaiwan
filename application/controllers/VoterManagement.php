@@ -169,10 +169,21 @@ class VoterManagement extends CI_Controller {
 
 
             } else {
-                 $data = array(
-                    'widget' => $this->recaptcha->getWidget(),
-                    'script' => $this->recaptcha->getScriptTag(),
-                     );
+				$data = array(
+					'widget' => $this->recaptcha->getWidget(),
+					'script' => $this->recaptcha->getScriptTag(),
+				);
+				if($this->uri->segment(3)){
+					$passport_no = $this->uri->segment(3);
+
+					//check user in database
+					$this->load->model("Voter_m");
+					$user = $this->Voter_m->exist($passport_no);
+
+					$data['user'] = $user;
+					$data['status'] = "update";
+				}
+
                 $this->load->view('registerVoter',$data);
             }
 //        } else {

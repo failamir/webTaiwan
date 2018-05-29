@@ -116,7 +116,12 @@
             <td><?=$voter->fullname ?></td>
             <td><?=$voter->gender == "Female" ? "Perempuan" : "Laki-laki"?></td>
             <td><?= $voter->is_verified == 1 ? 'Terverifikasi' : 'Belum Terverifikasi' ?></td>
-            <td><a href="#" data-toggle="modal" data-target="#myModal">Edit</a></td>
+            <td><?php if (isset($_SESSION['user_logged'])) {?>
+					<a href="#">Verifikasi</a>
+				<?php } else { ?>
+					<a href="#" data-toggle="modal" data-target="#myModal" data-userid="<?= md5($voter->passport_no); ?>">Edit</a>
+				<?php } ?>
+			</td>
         </tr>
         <?php
         $a = $a+1;
@@ -165,13 +170,17 @@
 
             <!-- Modal body -->
             <div class="modal-body">
+				<div class="alert alert-danger alert-dismissible" role="alert" id="errorModal">
+					Nomor paspor yang Anda masukkan tidak sesuai.
+				</div>
                 <div class="col-sm-10"><label for="passport_no">Silahkan masukkan nomor paspor Anda: </label></div>
                 <div class="col-sm-10"><input class="form-control" name="passport_no" id="passport_no" type="text" placeholder="contoh: B1234567" required></div>
             </div>
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+				<button class="btn btn-primary" id="submitModal">Kirim</button>
             </div>
 
         </div>
@@ -182,6 +191,7 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/jquery.md5.js"></script>
 <script>
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function() {
@@ -203,14 +213,27 @@
                 forms.submit();
             });
         }, false);
+
+		$('#myModal').on('show.bs.modal', function(e) {
+			$('#errorModal').css('display','none');
+			var userid = $(e.relatedTarget).data('userid');
+
+			$("#submitModal").click(function () {
+				if (userid == $.md5($("#passport_no").val())) {
+					window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + $("#passport_no").val();
+				} else {
+					$('#errorModal').css('display','block');
+				}
+			});
+		});
     })();
 </script>
 
-<?php }else{ ?>
+<?php } else { ?>
 
-     <p>Jika nama yang Anda cari tidak ada, silahkan daftarkan <a href="<?php echo base_url(); ?>voterManagement/register">disini</a>.</p>
-     </body>
-     <div class="jumbotron">
+	<p>Jika nama yang Anda cari tidak ada, silahkan daftarkan <a href="<?php echo base_url(); ?>voterManagement/register">disini</a>.</p>
+	</body>
+	<div class="jumbotron">
     <h5 align="center">Panitia Pemilihan Luar Negeri (PPLN)</h5>
     <p align="center">6F, No. 550, Rui Guang Road, Neihu District, Taipei, 114, Taiwan, ROC<br>
         Phone : (02) 87526170<br>

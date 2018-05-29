@@ -265,7 +265,7 @@
 if (!googleResponse) {
     $('<p style="color:red !important" class=error-captcha"><span class="glyphicon glyphicon-remove " ></span> Silahkan verifikasi bukan robot / Captcha dulu, centang diatas.</p>" ').insertAfter("#munculNotif");
     return false;
-} else {            
+} else {
     return true;
 }
 }
