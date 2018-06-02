@@ -35,6 +35,8 @@
             <div class="my-2 my-lg-0">
                 <a href="<?php echo base_url(); ?>auth/logout"><button class="btn btn-outline-success my-2 my-sm-0" type="button">Logout</button></a>
             </div>
+
+            
         <?php } ?>
     </div>
 </nav>

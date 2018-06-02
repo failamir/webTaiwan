@@ -20,6 +20,11 @@ class VoterManagement extends CI_Controller {
 //        }
 	}
 
+	public function index()
+    {
+    	redirect(base_url()."voterManagement/search","refresh");
+    }
+
 	public function search() {
 //        if (isset($_SESSION['user_logged'])) {
 		if (isset($_POST['search']) || $this->uri->segment(3)) {

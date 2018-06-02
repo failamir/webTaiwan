@@ -21,9 +21,12 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="<?php echo base_url(); ?>user/profile">Home <span class="sr-only">(current)</span></a>
+               <!-- disembunyikan supaya orang fokus untuk ngisi, kalau mau login langsung ke http://localhost/ppln2018_tw/auth/login-->
+            <?php if (isset($_SESSION['user_logged'])) { ?>
+                   <li class="nav-item">
+                <a class="nav-link" href="<?php echo base_url(); ?>user/profile">Home</a>
             </li>
+            <?php } ?>
             <li class="nav-item">
                 <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/search">Cari Pemilih</a>
             </li>
@@ -35,6 +38,7 @@
         <div class="my-2 my-lg-0">
             <a href="<?php echo base_url(); ?>auth/logout"><button class="btn btn-outline-success my-2 my-sm-0" type="button">Logout</button></a>
         </div>
+
         <?php } ?>
     </div>
 </nav>
