@@ -35,7 +35,7 @@ class VoterManagement extends CI_Controller {
 
 			$this->load->model("Voter_m");
 
-			// search by name or passport no
+//			search by name or passport no
 			if ($_POST['searchBy'] == 'name') {
 				$name = $_POST['searchVal'];
 				$passport_no = "";
@@ -44,7 +44,7 @@ class VoterManagement extends CI_Controller {
 				$passport_no = $_POST['searchVal'];
 			}
 
-//                // set array for PAGINATION LIBRARY, and show view data according to page.
+//          set array for PAGINATION LIBRARY, and show view data according to page.
 			$config = array();
 			$config["base_url"] = base_url() . "/voterManagement/search";
 			$total_row = $this->Voter_m->record_count($name, $passport_no);
@@ -74,30 +74,33 @@ class VoterManagement extends CI_Controller {
 			$data["searchVal"] = $_POST['searchVal'];
 			$data["totalRows"] = $total_row;
 
-
-
-//                $this->load->model("Voter_m");
-//                $data['voters'] = $this->Voter_m->getAllData($name,$passport_no);
-
-			$this->load->view('searchResult', $data);
+			$this->load->view('layout/header');
+			$this->load->view('voter/searchResult', $data);
+			$this->load->view('layout/footer');
 		} else {
-			$this->load->view('searchVoter');
+			$this->load->view('layout/header');
+			$this->load->view('voter/searchVoter');
+			$this->load->view('layout/footer');
 		}
-//        } else {
-//            $this->load->view('login');
-//        }
+
 	}
 
 	public function register() {
 //        if (isset($_SESSION['user_logged'])) {
 
 		if (isset($_POST['register']) || isset($_POST['update'])) {
-			var_dump($_POST);
+			//var_dump($_POST);
 			$passport_no = $_POST['passport_no'];
 
 			//check user in database
 			$this->load->model("Voter_m");
 			$user = $this->Voter_m->exist($passport_no);
+
+			//untuk ketentuan upload
+			$config['upload_path'] = './assets/idimages/'; //path folder
+			$config['allowed_types'] = 'gif|jpg|png|jpeg|bmp'; //type yang dapat diakses bisa anda sesuaikan
+			$config['encrypt_name'] = TRUE; //nama yang terupload nantinya
+			$this->upload->initialize($config);
 
 			$recaptcha = $this->input->post('g-recaptcha-response');
 			//if (!empty($recaptcha)) {
@@ -107,80 +110,132 @@ class VoterManagement extends CI_Controller {
 					//if (isset($response['success']) and $response['success'] === true) {
 
 
-					//if user exists
-//					if (!is_null($user)) {
-//						//temporary message
-//						$this->session->set_flashdata("error", "Registrasi gagal. Pemilih telah terdaftar!");
-//
-//						//redirect to profile page
-//						redirect(base_url()."voterManagement/register","refresh");
-//					} else {
+					$data = array(
+						'nik' => $_POST['nik'],
+						'passport_no' => $_POST['passport_no'],
 
-						//untuk ketentuan upload
-						$config['upload_path'] = './assets/idimages/'; //path folder
-						$config['allowed_types'] = 'gif|jpg|png|jpeg|bmp'; //type yang dapat diakses bisa anda sesuaikan
-						$config['encrypt_name'] = TRUE; //nama yang terupload nantinya
-						$this->upload->initialize($config);
+						'fullname' => $_POST['fullname'],
+						'birthdate' => $_POST['birthdate'],
+						'birthplace' => $_POST['birthplace'],
+						'phone_number' => $_POST['phone_number'],
+						'line_id' => $_POST['line_id'],
+						'email' => $_POST['email'],
+						'gender' => $_POST['gender'],
+						'marital_status' => $_POST['marital_status'],
+						'city' => $_POST['city'],
+						'address' => $_POST['address'],
+						'disability_type' => $_POST['disability_type'],
+						'kpps_type' => $_POST['kpps_type']
+					);
 
-						if(!empty($_FILES['photo']['name']))
-						{
-							if ($this->upload->do_upload('photo'))
-							{
-								$gbr = $this->upload->data();
-								$gambar=$gbr['file_name']; //Mengambil file name dari gambar yang diupload
-								//$judul=strip_tags($this->input->post('judul'));
-								$data = array(
-									'nik' => $_POST['nik'],
-									'passport_no' => $_POST['passport_no'],
-									'photo' => $gambar,
-									'fullname' => $_POST['fullname'],
-									'birthdate' => $_POST['birthdate'],
-									'birthplace' => $_POST['birthplace'],
-									'phone_number' => $_POST['phone_number'],
-									'line_id' => $_POST['line_id'],
-									'email' => $_POST['email'],
-									'gender' => $_POST['gender'],
-									'marital_status' => $_POST['marital_status'],
-									'city' => $_POST['city'],
-									'address' => $_POST['address'],
-									'disability_type' => $_POST['disability_type'],
-									'kpps_type' => $_POST['kpps_type']
-								);
-								if (isset($_POST['register'])) {
-									if (!is_null($user)) {
-										//temporary message
-										$this->session->set_flashdata("error", "Registrasi gagal. Pemilih telah terdaftar!");
+						if (isset($_POST['register'])) {
+							if (!is_null($user)) {
+								//temporary message
+								$this->session->set_flashdata("error", "Registrasi gagal. Pemilih telah terdaftar!");
 
-										//redirect to profile page
-										redirect(base_url()."voterManagement/register","refresh");
-									} else {
+								//redirect to profile page
+								redirect(base_url()."voterManagement/register","refresh");
+							} else {
+
+								if(!empty($_FILES['photo']['name']))
+								{
+									if ($this->upload->do_upload('photo'))
+									{
+										$gbr = $this->upload->data();
+										$gambar=$gbr['file_name']; //Mengambil file name dari gambar yang diupload
+										//$judul=strip_tags($this->input->post('judul'));
+											
 										$data['date_created'] = date("Y-m-d h:i:sa");
+										$data['photo'] = $gambar;
+										$data['is_verified'] = '1';
 										$result = $this->Voter_m->insert($data);
+										if ($result) {
+											// $this->session->set_flashdata("success", "Registrasi pemilih berhasil!");
+											// redirect(base_url() . "voterManagement/register", "refresh");
+										$this->load->view('layout/header');
+										$this->load->view('v_thanks');
+										$this->load->view('layout/footer');
+										} else {
+											$this->session->set_flashdata("error", "Registrasi gagal!");
+		//									redirect(base_url() . "voterManagement/register", "refresh");
+										}
+									
+									}else{
+										echo "Gambar Gagal Upload. Gambar harus bertipe gif|jpg|png|jpeg|bmp";
 									}
 
-								} else {
-									$data['date_modified'] = date("Y-m-d h:i:sa");
-									$result = $this->Voter_m->update($data);
+								}else{
+									echo "Gagal, gambar belum di pilih";
 								}
-								if ($result) {
-									$this->session->set_flashdata("success", "Registrasi pemilih berhasil!");
-									redirect(base_url() . "voterManagement/register", "refresh");
-								} else {
-									$this->session->set_flashdata("error", "Registrasi gagal!");
-//									redirect(base_url() . "voterManagement/register", "refresh");
-								}
-
-								$this->load->view('v_thanks');
-							}else{
-								echo "Gambar Gagal Upload. Gambar harus bertipe gif|jpg|png|jpeg|bmp";
 							}
 
-						}else{
-							echo "Gagal, gambar belum di pilih";
-						}
-//					}
-					//close captcha dibawah ini
-				}
+						} else {// kalau mereka update
+
+							//status 0 belum terverifikasi, 1 menunggu admin, 2 terverifikasi
+							if($_POST['status_verifikasi']=='0' ){
+								//harus pake gambar
+								echo "jika verifikasi 0";
+								if(!empty($_FILES['photo']['name']))
+								{
+									if ($this->upload->do_upload('photo'))
+									{
+										$gbr = $this->upload->data();
+										$gambar=$gbr['file_name']; //Mengambil file name dari gambar yang diupload
+										$data['photo'] = $gambar;
+										//$judul=strip_tags($this->input->post('judul'));
+											
+										$data['date_created'] = date("Y-m-d h:i:sa");
+										$data['is_verified'] = '1';
+										echo "verifikasi ganti 1";
+									}else{
+										
+										redirect(base_url() . "voterManagement/register", "refresh");
+										echo "Gambar Gagal Upload. Gambar harus bertipe gif|jpg|png|jpeg|bmp";
+									}
+
+								}else{
+									
+									redirect(base_url() . "voterManagement/register");
+									echo "Gagal, gambar belum di pilih";
+								}
+
+
+
+							}else{
+								
+								//gak pake gambar gak apa
+								if(!empty($_FILES['photo']['name']))
+								{
+									if ($this->upload->do_upload('photo'))
+									{
+										$gbr = $this->upload->data();
+										$gambar=$gbr['file_name']; //Mengambil file name dari gambar yang diupload
+										$data['photo'] = $gambar;
+									}else{
+										redirect(base_url() . "voterManagement/register", "refresh");
+										echo "Gambar Gagal Upload. Gambar harus bertipe gif|jpg|png|jpeg|bmp";
+									}
+								}
+							}
+
+							$data['date_modified'] = date("Y-m-d h:i:sa");
+							$result = $this->Voter_m->update($data);
+
+
+							if ($result) {
+								// $this->session->set_flashdata("success", "Update data pemilih berhasil!,");
+								// redirect(base_url() . "voterManagement/register", "refresh");
+								$this->load->view('layout/header');
+										$this->load->view('voter/v_thanks');
+										$this->load->view('layout/footer');
+							} else {
+								$this->session->set_flashdata("error", "Update gagal!, Silahkan cek kembali isian anda");
+								redirect(base_url() . "voterManagement/register");
+							}
+						
+						}// close if update
+					
+				}//close captcha ini
 			}
 
 
@@ -199,8 +254,9 @@ class VoterManagement extends CI_Controller {
 				$data['user'] = $user;
 				$data['status'] = "update";
 			}
-
-			$this->load->view('registerVoter',$data);
+			$this->load->view('layout/header');
+			$this->load->view('voter/registerVoter',$data);
+			$this->load->view('layout/footer');
 		}
 //        } else {
 //            $this->load->view('login');

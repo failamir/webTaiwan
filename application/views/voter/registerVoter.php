@@ -1,47 +1,3 @@
-<!doctype html>
-<html lang="en">
-<head>
-	<!--  meta tags -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap.css">
-
-	<title><?= !isset($status) ? "Registrasi" : "Update"; ?></title>
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-	<a class="navbar-brand" href="http://pplntaipei2019.org">PPLN Taiwan</a>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	</button>
-
-	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav mr-auto">
-		     <!-- disembunyikan supaya orang fokus untuk ngisi, kalau mau login langsung ke http://localhost/ppln2018_tw/auth/login-->
-            <?php if (isset($_SESSION['user_logged'])) { ?>
-                   <li class="nav-item">
-                <a class="nav-link" href="<?php echo base_url(); ?>user/profile">Home</a>
-            </li>
-            <?php } ?>
-			<li class="nav-item">
-				<a class="nav-link" href="<?php echo base_url(); ?>voterManagement/search">Cari Pemilih</a>
-			</li>
-			<li class="nav-item active">
-				<a class="nav-link" href="<?php echo base_url(); ?>voterManagement/register">Daftarkan Pemilih <span class="sr-only">(current)</span></a>
-			</li>
-		</ul>
-		<?php if (isset($_SESSION['user_logged'])) { ?>
-			<div class="my-2 my-lg-0">
-				<a href="<?php echo base_url(); ?>auth/logout"><button class="btn btn-outline-success my-2 my-sm-0" type="button">Logout</button></a>
-			</div>
-		<?php } ?>
-	</div>
-</nav>
-<br>
 <div class="container">
 	<div class="page-header">
 		<h1>Registrasi Pemilih</h1>
@@ -60,6 +16,7 @@
 		</div>
 	<?php };
 	if (isset($user)) {
+		//echo print_r($user);
 		$user = json_decode(json_encode($user), True);
 	}?>
 	<form action="<?php echo base_url().'index.php/voterManagement/register'?>" class="registerForm" method="post" enctype="multipart/form-data">
@@ -67,6 +24,8 @@
 			<div class="col-sm-5"><label for="nik">NIK/Nomor Induk Kependudukan Indonesia (opsional):</label></div>
 			<div class="col-sm-7"><input class="form-control" name="nik" id="nik" type="text"></div>
 		</div>
+
+		<input type="hidden" name="status_verifikasi" id="status_verifikasi">
 
 		<div class="form-group row">
 			<div class="col-sm-5"><label for="passport_no">Nomor Paspor:</label></div>
@@ -91,7 +50,7 @@
 
 		<div class="form-group row">
 			<div class="col-sm-5"><label for="phone_number">Nomor Telepon:</label></div>
-			<div class="col-sm-7"><input class="form-control" name="phone_number" id="phone_number" type="number" required>
+			<div class="col-sm-7"><input class="form-control" name="phone_number" id="phone_number" type="text" required>
 				<div class="invalid-feedback">
 					Mohon diisi dengan benar.
 				</div>
@@ -216,7 +175,25 @@
 
 		<div class="form-group row">
 			<div class="col-sm-5"><label for="photo">Upload foto paspor atau KTP atau ARC untuk verifikasi <br>(tipe file: jpg, png & gif, ukuran: maks 2MB):</label></div>
-			<div class="col-sm-7"><input type="file" name="photo" id="photo" required style="vertical-align: top;"><img src="" name="photo" id="photo2" width="120" height="160" align="right"></div>
+			<div class="col-sm-7"><input type="file" name="photo" id="photo" style="vertical-align: top;" 	<?php
+				if(isset($user)){
+					if(	 $user['is_verified']=='0'){
+						echo 'required';
+					}
+				}else{
+					echo 'required';
+				}
+			?> >
+	<?php
+				if(isset($user)){
+					if(	 $user['is_verified']=='0'){
+						echo 'required atas';
+					}
+				}else{
+					echo 'required bawah';
+				}
+			?> 
+			<img src="" name="photo" id="photo2" width="120" height="160" align="right"></div>
 		</div>
 
 		<div class="form-group" id="munculNotif" align="center">
@@ -236,13 +213,7 @@
 	</form>
 </div>
 <br>
-<br>
-<div class="jumbotron">
-	<h5 align="center">Panitia Pemilihan Luar Negeri (PPLN)</h5>
-	<p align="center">6F, No. 550, Rui Guang Road, Neihu District, Taipei, 114, Taiwan, ROC<br>
-		Phone : (02) 87526170<br>
-		Fax : (02) 87523706</p>
-</div>
+
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -269,6 +240,7 @@
 
 		<?php if (isset($user)) { ?>
 		$("#nik").val("<?= $user['nik'] ?>");
+		$("#status_verifikasi").val("<?= $user['is_verified'] ?>");
 		$("[name='passport_no']").val("<?= $user['passport_no'] ?>");
 		$("#passport_no").prop('disabled', true);
 		$("#fullname").val("<?= $user['fullname'] ?>");

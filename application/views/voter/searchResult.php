@@ -1,48 +1,3 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap.css">
-
-    <title>Hasil Pencarian Pemilih</title>
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">PPLN Taiwan</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-               <!-- disembunyikan supaya orang fokus untuk ngisi, kalau mau login langsung ke http://localhost/ppln2018_tw/auth/login-->
-            <?php if (isset($_SESSION['user_logged'])) { ?>
-                   <li class="nav-item">
-                <a class="nav-link" href="<?php echo base_url(); ?>user/profile">Home</a>
-            </li>
-            <?php } ?>
-            
-            <li class="nav-item active">
-                <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/search">Cari Pemilih <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/register">Daftarkan Pemilih</a>
-            </li>
-        </ul>
-        <?php if (isset($_SESSION['user_logged'])) { ?>
-            <div class="my-2 my-lg-0">
-                <a href="<?php echo base_url(); ?>auth/logout"><button class="btn btn-outline-success my-2 my-sm-0" type="button">Logout</button></a>
-            </div>
-        <?php } ?>
-    </div>
-</nav>
-<br>
 <div class="container">
     <div class="page-header">
         <h1>Hasil Pencarian Pemilih</h1>
@@ -88,7 +43,7 @@
     </form>
     <br>
     <div align="right">
-        Jumlah data: <?php echo $totalRows;
+       <?php 
             if($totalRows!=0)
                 {
         ?>
@@ -120,7 +75,7 @@
             </td>
             <td><?=$voter->fullname ?></td>
             <td><?=$voter->gender == "Female" ? "Perempuan" : "Laki-laki"?></td>
-            <td><?= $voter->is_verified == 1 ? 'Terverifikasi' : 'Belum Terverifikasi' ?></td>
+            <td><?= $voter->is_verified == 0 ? 'Belum Terverifikasi' : 'Terverifikasi' ?></td>
             <td><?php if (isset($_SESSION['user_logged'])) {?>
 					<a href="#">Verifikasi</a>
 				<?php } else { ?>
@@ -236,14 +191,9 @@
 
 <?php } else { ?>
 
-	<p>Jika nama yang Anda cari tidak ada, silahkan daftarkan <a href="<?php echo base_url(); ?>voterManagement/register">disini</a>.</p>
-	</body>
-	<div class="jumbotron">
-    <h5 align="center">Panitia Pemilihan Luar Negeri (PPLN)</h5>
-    <p align="center">6F, No. 550, Rui Guang Road, Neihu District, Taipei, 114, Taiwan, ROC<br>
-        Phone : (02) 87526170<br>
-        Fax : (02) 87523706</p>
+	<p>Nama/Nomor paspor anda belum terdaftar, silahkan daftar  <a href="<?php echo base_url(); ?>voterManagement/register">disini</a>.</p>
 </div>
+	</body>
 <?php } ?>
 
 </html>
