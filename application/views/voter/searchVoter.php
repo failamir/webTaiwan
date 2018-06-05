@@ -33,7 +33,12 @@
         </div>
 
         <div>
+            <span></span>
+            <div class="my-2 my-lg-0">
+
             <button class="btn btn-primary" name="search">Search</button>
+            <a href="<?php echo base_url(); ?>voterManagement/register"><button class="btn btn-success my-2 my-sm-0" type="button">Daftar Baru</button></a>
+        </div>
         </div>
     </form>
     <br>

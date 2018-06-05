@@ -19,9 +19,9 @@ class User extends CI_Controller {
 
     public function profile() {
         if (isset($_SESSION['user_logged'])) {
-            $this->load->view('profile');
+            $this->load->view('admin/profile');
         } else {
-            $this->load->view('login');
+            $this->load->view('admin/login');
         }
     }
 

@@ -169,7 +169,7 @@ class VoterManagement extends CI_Controller {
 								}
 							}
 
-						} else {// kalau mereka update
+						} else {// kalau mereka update 
 
 							//status 0 belum terverifikasi, 1 menunggu admin, 2 terverifikasi
 							if($_POST['status_verifikasi']=='0' ){
@@ -263,7 +263,4 @@ class VoterManagement extends CI_Controller {
 //        }
 	}
 
-	public function edit() {
-
-	}
 }

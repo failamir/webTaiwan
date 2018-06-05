@@ -31,7 +31,7 @@
         </div>
 
         <div class="form-group">
-            <input class="form-control" value="<?=$searchVal?>" name="searchVal" id="searchVal" type="searchVal" placeholder="contoh: Dyah atau B1234567" required>
+            <input class="form-control" value="<?=$searchVal?>" name="searchVal" id="searchVal" type="searchVal" placeholder="contoh: Dyah atau B1234567, minimal 4 huruf" minlength="4" required>
             <div class="invalid-feedback">
                 Mohon masukkan pencarian dengan benar.
             </div>
@@ -39,6 +39,7 @@
 
         <div>
             <button class="btn btn-primary" name="search">Cari</button>
+            <a href="<?php echo base_url(); ?>voterManagement/register"><button class="btn btn-success my-2 my-sm-0" type="button">Daftar Baru</button></a>
         </div>
     </form>
     <br>
@@ -67,10 +68,17 @@
         foreach ($voters as $voter) { ?>
         <tr align="center">
             <td><?=$a ?></td>
-            <td><?=$voter->nik ?></td>
+            <td><?php if (!isset($_SESSION['user_logged'])) {
+                if(strlen($voter->nik)<3){
+                    echo "-";
+                }else{
+                $str_end_nik = substr($voter->nik,-3);
+                ?><?="***".$str_end_nik?>
+                <?php }} else { echo $voter->nik; }?>
+            </td>
             <td><?php if (!isset($_SESSION['user_logged'])) {
                 $str_end = substr($voter->passport_no,-3);
-                ?><?="****".$str_end?>
+                ?><?="***".$str_end?>
 				<?php } else { echo $voter->passport_no; }?>
             </td>
             <td><?=$voter->fullname ?></td>
@@ -99,7 +107,7 @@
         </tr>
         </thead>
     </table>
-    <div id="pagination">
+    <div id="pagination">  
         <ul class="pagination">
 
 <!--            Show pagination links -->
@@ -110,12 +118,6 @@
     </div>
 </div>
 <br>
-<div class="jumbotron">
-    <h5 align="center">Panitia Pemilihan Luar Negeri (PPLN)</h5>
-    <p align="center">6F, No. 550, Rui Guang Road, Neihu District, Taipei, 114, Taiwan, ROC<br>
-        Phone : (02) 87526170<br>
-        Fax : (02) 87523706</p>
-</div>
 
 <!-- The Modal -->
 <div class="modal fade" id="confirmModal">
