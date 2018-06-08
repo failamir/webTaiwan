@@ -78,16 +78,36 @@
             </td>
             <td><?php if (!isset($_SESSION['user_logged'])) {
                 $str_end = substr($voter->passport_no,-3);
-                ?><?="***".$str_end?>
+                ?><?="*****".$str_end?>
 				<?php } else { echo $voter->passport_no; }?>
             </td>
             <td><?=$voter->fullname ?></td>
             <td><?=$voter->gender == "Female" ? "Perempuan" : "Laki-laki"?></td>
             <td><?= $voter->is_verified == 0 ? 'Belum Terverifikasi' : 'Terverifikasi' ?></td>
             <td><?php if (isset($_SESSION['user_logged'])) {?>
-					<a href="#">Verifikasi</a>
+					<a href="#" class="btn btn-info" data-toggle="modal" data-target="#confirmModal" 
+                    data-status="admin" 
+                    data-passport_no="<?= $voter->passport_no; ?>"
+                    data-fullname="<?= $voter->fullname; ?>"
+                    data-is_Verified="<?= $voter->is_verified; ?>"
+                    data-nik="<?= $voter->nik; ?>"
+                    data-birthdate="<?= $voter->birthdate; ?>"
+                    data-phone_number="<?= $voter->phone_number; ?>"
+                    data-line_id="<?= $voter->line_id; ?>"
+                    data-email="<?= $voter->email; ?>"
+                    data-gender="<?= $voter->gender; ?>"
+                    data-marital_status="<?= $voter->marital_status; ?>"
+                    data-city="<?= $voter->city; ?>"
+                    data-address="<?= $voter->address; ?>"
+                    data-address_chinese="<?= $voter->address_chinese; ?>"
+                    data-disability_type="<?= $voter->disability_type; ?>"
+                    data-kpps_type="<?= $voter->kpps_type; ?>"
+                    data-is_verified="<?= $voter->is_verified; ?>"
+                    data-date_created="<?= $voter->date_created; ?>"
+                    >Verifikasi</a>
+                   
 				<?php } else { ?>
-					<a href="#" data-toggle="modal" data-target="#confirmModal" data-userid="<?= md5($voter->passport_no); ?>">Edit</a>
+					<a href="#" data-toggle="modal" data-target="#confirmModal" data-passport_no="<?= md5($voter->passport_no); ?>">Edit</a>
 				<?php } ?>
 			</td>
         </tr>
@@ -121,10 +141,112 @@
 
 <!-- The Modal -->
 <div class="modal fade" id="confirmModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <!-- Modal Header -->
+            <?php if (isset($_SESSION['user_logged'])) {?>
+                <!-- ini kalau sudah login jadi admin -->
+                <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Verifikasi Pemilih</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="alert alert-danger alert-dismissible" role="alert" id="errorModal">
+                    Nomor paspor yang Anda masukkan tidak sesuai.
+                </div>
+                <div class="col-sm-10"><label for="passport_no" id="alert"><a>Information</a></label> </div>
+                <div class="row">
+                  <div class="table-responsive col-md-6">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th id="m_fullname">Nama</th>
+                          <th id="m_is_verified">Verified</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>NIK</td>
+                          <td id="m_nik"></td>
+                        </tr>
+                        <tr>
+                          <td>Paspor</td>
+                          <td id="m_pasport_no"></td>
+                        </tr>
+                        <tr>
+                          <td>Lahir</td>
+                          <td id="m_birthdate"></td>
+                        </tr>
+                        <tr>
+                          <td>Telepon</td>
+                          <td id="m_phone_number"></td>
+                        </tr>
+                        <tr>
+                          <td>Line_id</td>
+                          <td id="m_line_id"></td>
+                        </tr>
+                        <tr>
+                          <td>Email</td>
+                          <td id="m_email"></td>
+                        </tr>
+                      </tbody>
+                     </table>
+                    </div>
+                    
+                    <div class="table-responsive col-md-6">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th id="m_city"></th>
+                          <th id="m_kpps_type"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Alamat(en)</td>
+                          <td id="m_address"></td>
+                        </tr>
+                        <tr>
+                          <td>Alamat(zhongwen)</td>
+                          <td id="m_address_chinese"> </td>
+                        </tr>
+                        <tr>
+                          <td>Gender</td>
+                          <td id="m_gender"></td>
+                        </tr>
+                        <tr>
+                          <td>Status Nikah</td>
+                          <td id="m_marital_status"></td>
+                        </tr>
+                        <tr>
+                          <td>Disabilitas</td>
+                          <td id="m_disability_type"></td>
+                        </tr>
+                        <tr>
+                          <td>Input data</td>
+                          <td id="m_date_created"></td>
+                        </tr>
+                      </tbody>
+                     </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+                <button class="btn btn-danger" id="HapusDataModal">Hapus</button>
+                 <button class="btn btn-success" id="VerifikasiDataModal">Verifikasi</button>
+                <button class="btn btn-primary" id="UbahDataModal">Ubah data</button>
+
+            </div>
+
+            <?php } else { ?>
+                <!-- kalau tidak login admin -->
+                 <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title">Konfirmasi</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -132,9 +254,9 @@
 
             <!-- Modal body -->
             <div class="modal-body">
-				<div class="alert alert-danger alert-dismissible" role="alert" id="errorModal">
-					Nomor paspor yang Anda masukkan tidak sesuai.
-				</div>
+                <div class="alert alert-danger alert-dismissible" role="alert" id="errorModal">
+                    Nomor paspor yang Anda masukkan tidak sesuai.
+                </div>
                 <div class="col-sm-10"><label for="passport_no">Silahkan masukkan nomor paspor Anda: </label></div>
                 <div class="col-sm-10"><input class="form-control" name="passport_no" id="passport_no" type="text" placeholder="contoh: B1234567" required></div>
             </div>
@@ -142,8 +264,10 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-				<button class="btn btn-primary" id="submitModal">Kirim</button>
+                <button class="btn btn-primary" id="submitModal">Verifikasi data</button>
             </div>
+                <?php } ?>
+           
 
         </div>
     </div>
@@ -178,17 +302,105 @@
 
 		$('#confirmModal').on('show.bs.modal', function(e) {
 			$('#errorModal').css('display','none');
-			var userid = $(e.relatedTarget).data('userid');
+			var passport_no = $(e.relatedTarget).data('passport_no');
+            var status = $(e.relatedTarget).data('status');
+            if(status=='admin'){
+                document.getElementById("m_pasport_no").innerHTML = $(e.relatedTarget).data('passport_no');
+                document.getElementById("m_fullname").innerHTML = $(e.relatedTarget).data('fullname');
+                document.getElementById("m_is_verified").innerHTML = $(e.relatedTarget).data('is_verified');
+                if($(e.relatedTarget).data('is_verified')=='0'){
+                    document.getElementById("m_is_verified").innerHTML = '<a style="background:red; color:white;">Belum Terverifikasi</a>';
+                }else if ($(e.relatedTarget).data('is_verified')=='1') {
+                    document.getElementById("m_is_verified").innerHTML = '<a style="background:green; color:white;">Terverifikasi User</a>';
+                }else if ($(e.relatedTarget).data('is_verified')=='2'){
+                    document.getElementById("m_is_verified").innerHTML = '<a style="background:green; color:white;">Terverifikasi Admin</a>';
+                }
+                document.getElementById("m_nik").innerHTML = $(e.relatedTarget).data('nik');
+                document.getElementById("m_birthdate").innerHTML = $(e.relatedTarget).data('birthdate');
+                document.getElementById("m_phone_number").innerHTML = $(e.relatedTarget).data('phone_number');
+                document.getElementById("m_line_id").innerHTML = $(e.relatedTarget).data('line_id');
+                document.getElementById("m_email").innerHTML = $(e.relatedTarget).data('email');
+                document.getElementById("m_gender").innerHTML = $(e.relatedTarget).data('gender');
+                if($(e.relatedTarget).data('gender')=='Male'){
+                    document.getElementById("m_gender").innerHTML = 'Laki-laki';
+                }else{
+                    document.getElementById("m_gender").innerHTML = 'Perempuan';
+                }
+
+                document.getElementById("m_marital_status").innerHTML = $(e.relatedTarget).data('marital_status');
+                if($(e.relatedTarget).data('marital_status')=='B' || $(e.relatedTarget).data('marital_status')=='b' ){
+                    document.getElementById("m_marital_status").innerHTML ='Belum Menikah';
+                }else if($(e.relatedTarget).data('marital_status')=='S' || $(e.relatedTarget).data('marital_status')=='s'){
+                    document.getElementById("m_marital_status").innerHTML ='Sudah Menikah';
+                }else{
+                    document.getElementById("m_marital_status").innerHTML ='Pernah Menikah';
+                }
+                document.getElementById("m_city").innerHTML = $(e.relatedTarget).data('city');
+                document.getElementById("m_address").innerHTML = $(e.relatedTarget).data('address');
+                document.getElementById("m_address_chinese").innerHTML = $(e.relatedTarget).data('address_chinese');
+                
+                document.getElementById("m_disability_type").innerHTML = $(e.relatedTarget).data('disability_type');
+                if($(e.relatedTarget).data('disability_type')=='NONE'){
+                    document.getElementById("m_disability_type").innerHTML = 'Tidak Ada';
+                }else if ($(e.relatedTarget).data('disability_type')=='TD'){
+                    document.getElementById("m_disability_type").innerHTML = 'Tuna Daksa';
+                }else if ($(e.relatedTarget).data('disability_type')=='TN'){
+                    document.getElementById("m_disability_type").innerHTML = 'Tuna Rungu';
+                }else if ($(e.relatedTarget).data('disability_type')=='TRTW'){
+                    document.getElementById("m_disability_type").innerHTML = 'Tuna Rungu dan Tuna Wicara';
+                }else if ($(e.relatedTarget).data('disability_type')=='TG'){
+                    document.getElementById("m_disability_type").innerHTML = 'Tuna Grahita';
+                }else if ($(e.relatedTarget).data('disability_type')=='OTHER'){
+                    document.getElementById("m_disability_type").innerHTML = 'Disabilitas lainnya';
+                }
+
+                document.getElementById("m_kpps_type").innerHTML = $(e.relatedTarget).data('kpps_type');
+                if($(e.relatedTarget).data('kpps_type')=='KPPS'){
+                    document.getElementById("m_kpps_type").innerHTML = 'Datang Ke TPSLN';
+                }else if ($(e.relatedTarget).data('kpps_type')=='POS'){
+                    document.getElementById("m_kpps_type").innerHTML = 'Dikirim Pos';
+                }else if ($(e.relatedTarget).data('kpps_type')=='KSK'){
+                    document.getElementById("m_kpps_type").innerHTML = 'Kotak Suara Keliling';
+                }
+
+
+                document.getElementById("m_date_created").innerHTML = $(e.relatedTarget).data('date_created');
+            }
+            
 
 			$("#submitModal").click(function () {
-				if (userid == $.md5($("#passport_no").val())) {
-					window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + $("#passport_no").val();
+				if (passport_no == $.md5($("#passport_no").val())) {
+					window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + $("#passport_no").val(); 
 				} else {
 					$('#errorModal').css('display','block');
 				}
 			});
+
+            $("#UbahDataModal").click(function () {
+                window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + passport_no; 
+            });
+
+             $("#HapusDataModal").click(function () {
+                var result = confirm("Yakin ingin menghapus?");
+                if (result) {
+                    //Logic to delete the item
+                    window.location.href = "<?php echo base_url(); ?>voterManagement/delete/" + passport_no; 
+                }
+            });
+
+            $("#VerifikasiDataModal").click(function () {
+                if($(e.relatedTarget).data('is_verified')=='2'){
+                    alert("Pemilih Sudah Verified");
+                }else{
+                    window.location.href = "<?php echo base_url(); ?>voterManagement/verifyVoter/" + passport_no; 
+                }
+                
+            });
+             
+
 		});
     })();
+
 </script>
 
 <?php } else { ?>

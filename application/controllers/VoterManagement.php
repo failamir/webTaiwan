@@ -86,7 +86,7 @@ class VoterManagement extends CI_Controller {
 	}
 
 	public function register() {
-//        if (isset($_SESSION['user_logged'])) {
+
 
 		if (isset($_POST['register']) || isset($_POST['update'])) {
 			//var_dump($_POST);
@@ -153,7 +153,7 @@ class VoterManagement extends CI_Controller {
 											// $this->session->set_flashdata("success", "Registrasi pemilih berhasil!");
 											// redirect(base_url() . "voterManagement/register", "refresh");
 										$this->load->view('layout/header');
-										$this->load->view('v_thanks');
+										$this->load->view('voter/v_thanks');
 										$this->load->view('layout/footer');
 										} else {
 											$this->session->set_flashdata("error", "Registrasi gagal!");
@@ -225,9 +225,15 @@ class VoterManagement extends CI_Controller {
 							if ($result) {
 								// $this->session->set_flashdata("success", "Update data pemilih berhasil!,");
 								// redirect(base_url() . "voterManagement/register", "refresh");
-								$this->load->view('layout/header');
+							  if (isset($_SESSION['user_logged'])) {
+						        	$this->session->set_flashdata("success_msg", "Input data berhasil!");
+									redirect(base_url() . "voterManagement/search");
+						        }else{
+						        		$this->load->view('layout/header');
 										$this->load->view('voter/v_thanks');
 										$this->load->view('layout/footer');
+						        }
+							
 							} else {
 								$this->session->set_flashdata("error", "Update gagal!, Silahkan cek kembali isian anda");
 								redirect(base_url() . "voterManagement/register");
@@ -261,6 +267,30 @@ class VoterManagement extends CI_Controller {
 //        } else {
 //            $this->load->view('login');
 //        }
+	}
+
+	public function delete($passport_no){
+		$this->load->model("Voter_m");
+		$result=$this->Voter_m->delete($passport_no);
+		
+			if($result){
+			$this->session->set_flashdata('success_msg', 'Data sudah terhapus');
+		}else{
+			$this->session->set_flashdata('error_msg', 'gagal hapus data');
+		}
+		redirect(base_url('voterManagement/search'));
+	}
+
+	public function verifyVoter($passport_no){
+		$this->load->model("Voter_m");
+		$result=$this->Voter_m->verifyVoter($passport_no);
+		
+			if($result){
+			$this->session->set_flashdata('success_msg', 'Data sudah terverifikasi');
+		}else{
+			$this->session->set_flashdata('error_msg', 'gagal verifikasi data');
+		}
+		redirect(base_url('voterManagement/search'));
 	}
 
 }

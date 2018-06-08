@@ -153,8 +153,9 @@
 			<div class="col-sm-5"><label for="kpps_type">Jenis KPPS (cara pemilihan):</label></div>
 			<div class="col-sm-7"><select mutiple="multiple" id="kpps_type" name="kpps_type" class="form-control" required>
 					<option selected="" value=""> -- Pilih salah satu -- </option>
-					<option value="KPPS">Datang ke KPPSLN</option>
+					<option value="KPPS">Datang ke TPSLN</option>
 					<option value="POS">Kirim via POS</option>
+					<option value="KSK">Kotak Suara Keliling (Khusus ABK)</option>
 				</select>
 			</div>
 		</div>

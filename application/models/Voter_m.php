@@ -369,4 +369,27 @@ class Voter_m extends CI_Model {
 
         return $query->num_rows();
     }
+
+    public function delete($passport_no){
+        $this->db->where('passport_no',$passport_no);
+        $this->db->delete('voters');
+            if($this->db->affected_rows() >0){
+            return true;
+        }else{
+            return false;
+        }
+    
+    }
+
+    public function verifyVoter($passport_no){
+        $this->db->where('passport_no',$passport_no);
+        $data = array('is_verified' => 2);    
+        $this->db->update('voters', $data); 
+            if($this->db->affected_rows() >0){
+            return true;
+        }else{
+            return false;
+        }
+    
+    }
 }
