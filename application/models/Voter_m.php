@@ -392,4 +392,15 @@ class Voter_m extends CI_Model {
         }
     
     }
+
+     public  function getAllReferral() {
+         $query = $this->db->query("SELECT editor_phone, count(*) as jumlah FROM voters WHERE editor_phone is not null GROUP BY editor_phone");
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[] = $row;
+            }
+            return $query->result();
+        }
+        return FALSE;
+    }
 }

@@ -1,6 +1,6 @@
 <div class="container">
 	<div class="page-header">
-		<h1>Registrasi Pemilih</h1>
+		<h1>Registrasi Pemilih <?php if(isset($referral))echo "(Referral: ".$referral.")" ?></h1>
 	</div>
 	<p>Masukkan data untuk melakukan registrasi pemilih!</p>
 	<?php if(isset($_SESSION['success'])) { ?>
@@ -20,6 +20,12 @@
 		$user = json_decode(json_encode($user), True);
 	}?>
 	<form action="<?php echo base_url().'index.php/voterManagement/register'?>" class="registerForm" method="post" enctype="multipart/form-data">
+		
+		<div class="form-group row">
+			<div class="col-sm-5"><label for="editor_phone">Referral (Abaikan kalau tidak tahu):</label></div>
+			<div class="col-sm-7"><input value="<?php if(isset($referral))echo $referral ?>" class="form-control" name="editor_phone" id="editor_phone" type="text"></div>
+		</div>
+
 		<div class="form-group row">
 			<div class="col-sm-5"><label for="nik">NIK/Nomor Induk Kependudukan Indonesia (opsional):</label></div>
 			<div class="col-sm-7"><input class="form-control" name="nik" id="nik" type="text"></div>
@@ -241,6 +247,7 @@
 
 		<?php if (isset($user)) { ?>
 		$("#nik").val("<?= $user['nik'] ?>");
+		$("#editor_phone").val("<?php if($user['editor_phone']=='')echo($referral);echo($user['editor_phone']) ?>");
 		$("#status_verifikasi").val("<?= $user['is_verified'] ?>");
 		$("[name='passport_no']").val("<?= $user['passport_no'] ?>");
 		$("#passport_no").prop('disabled', true);

@@ -35,7 +35,7 @@
             <?php echo $_SESSION['error']; ?>
         </div>
     <?php } ?>
-    <p>Masukkan nama atau nomer paspor/SPLP pemilih :</p>
+    <p><?php if($referral)echo "(referral kode: ".$referral.")" ?>  Masukkan nama atau nomer paspor/SPLP pemilih :</p>
     <form action="" class="searchForm" method="post" novalidate>
         <div class="form-group">
             <select class="form-control" id="searchBy" name="searchBy">
@@ -54,7 +54,7 @@
         <div>
             <div class="my-2 my-lg-0">
             <button class="btn btn-primary" name="search">Search</button>
-            <a href="<?php echo base_url(); ?>voterManagement/register"><button class="btn btn-success my-2 my-sm-0" type="button">Daftar Baru</button></a>
+            <a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>"><button class="btn btn-success my-2 my-sm-0" type="button">Daftar Baru</button></a>
         </div>
         </div>
     </form>

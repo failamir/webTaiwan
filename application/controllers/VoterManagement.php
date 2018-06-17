@@ -27,6 +27,8 @@ class VoterManagement extends CI_Controller {
 
 	public function search() {
 //        if (isset($_SESSION['user_logged'])) {
+			$data["referral"] = $this->uri->segment(4);
+
 		if (isset($_POST['search']) || $this->uri->segment(3)) {
 
 //                $param_offset=0;
@@ -79,7 +81,7 @@ class VoterManagement extends CI_Controller {
 			$this->load->view('layout/footer');
 		} else {
 			$this->load->view('layout/header');
-			$this->load->view('voter/searchVoter');
+			$this->load->view('voter/searchVoter',$data);
 			$this->load->view('layout/footer');
 		}
 
@@ -87,6 +89,13 @@ class VoterManagement extends CI_Controller {
 
 	public function register() {
 
+		
+		if($this->uri->segment(4)){
+			$data["referral"] = $this->uri->segment(4);
+			$data["editor_phone"] = $this->uri->segment(4);
+	
+		}
+			
 
 		if (isset($_POST['register']) || isset($_POST['update'])) {
 			//var_dump($_POST);
@@ -113,7 +122,7 @@ class VoterManagement extends CI_Controller {
 					$data = array(
 						'nik' => $_POST['nik'],
 						'passport_no' => $_POST['passport_no'],
-
+						'editor_phone' => $_POST['editor_phone'],
 						'fullname' => $_POST['fullname'],
 						'birthdate' => $_POST['birthdate'],
 						'birthplace' => $_POST['birthplace'],
@@ -153,7 +162,7 @@ class VoterManagement extends CI_Controller {
 											// $this->session->set_flashdata("success", "Registrasi pemilih berhasil!");
 											// redirect(base_url() . "voterManagement/register", "refresh");
 										$this->load->view('layout/header');
-										$this->load->view('voter/v_thanks');
+										$this->load->view('voter/v_thanks',$data);
 										$this->load->view('layout/footer');
 										} else {
 											$this->session->set_flashdata("error", "Registrasi gagal!");
@@ -221,7 +230,6 @@ class VoterManagement extends CI_Controller {
 							$data['date_modified'] = date("Y-m-d h:i:sa");
 							$result = $this->Voter_m->update($data);
 
-
 							if ($result) {
 								// $this->session->set_flashdata("success", "Update data pemilih berhasil!,");
 								// redirect(base_url() . "voterManagement/register", "refresh");
@@ -230,7 +238,7 @@ class VoterManagement extends CI_Controller {
 									redirect(base_url() . "voterManagement/search");
 						        }else{
 						        		$this->load->view('layout/header');
-										$this->load->view('voter/v_thanks');
+										$this->load->view('voter/v_thanks',$data);
 										$this->load->view('layout/footer');
 						        }
 							
@@ -260,6 +268,10 @@ class VoterManagement extends CI_Controller {
 				$data['user'] = $user;
 				$data['status'] = "update";
 			}
+			
+			$data["referral"] = $this->uri->segment(4);
+			$data["editor_phone"] = $this->uri->segment(4);
+			
 			$this->load->view('layout/header');
 			$this->load->view('voter/registerVoter',$data);
 			$this->load->view('layout/footer');
@@ -291,6 +303,16 @@ class VoterManagement extends CI_Controller {
 			$this->session->set_flashdata('error_msg', 'gagal verifikasi data');
 		}
 		redirect(base_url('voterManagement/search'));
+	}
+
+	public function cekreferral(){
+			$this->load->model("Voter_m");
+			$referralmasuk = $this->Voter_m->getAllReferral();
+			// print_r($data["voters"]);
+			foreach ($referralmasuk as $object) {
+    			echo "nama orang yang ngerefers : ".$object->editor_phone;
+    			echo " ------> ".$object->jumlah."<br>";
+			}
 	}
 
 }

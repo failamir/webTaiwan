@@ -25,7 +25,7 @@ date_default_timezone_set('Asia/Taipei');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/ppln2018_tw/';
+$config['base_url'] = 'http://140.115.54.212/ppln2018_tw/';
 
 /*
 |--------------------------------------------------------------------------

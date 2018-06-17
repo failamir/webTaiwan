@@ -1,6 +1,6 @@
 <div class="jumbotron text-xs-center">
-  <h1 class="display-3">Terima Kasih!</h1>
-  <p class="lead"><strong>Data anda sudah masuk,</strong> untuk keterangan lebih lanjut silahkan kunjungi website kita</p>
+  <h1 class="display-3">Terima Kasih! <?php if(!$editor_phone=='')echo "referral anda ".$editor_phone; ?></h1>
+  <p class="lead"><strong>Data <?php echo $fullname; ?> sudah masuk,</strong> untuk keterangan lebih lanjut silahkan kunjungi website kita</p>
   <hr>
   <p>
     Silahkan kunjungi fb page  <a href="https://www.facebook.com/pplntaipei/">PPLN-Taipei</a>
