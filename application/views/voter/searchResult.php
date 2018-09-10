@@ -53,12 +53,13 @@
         <thead>
         <tr align="center">
             <th>No</th>
+			<th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Edit<?php } ?></th>
             <th>NIK</th>
             <th>Nomor Paspor</th>
             <th>Nama Lengkap</th>
             <th>Jenis Kelamin</th>
             <th>Status</th>
-			<th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Edit<?php } ?></th>
+			
         </tr>
         </thead>
         <tbody>
@@ -68,23 +69,7 @@
         foreach ($voters as $voter) { ?>
         <tr align="center">
             <td><?=$a ?></td>
-            <td><?php if (!isset($_SESSION['user_logged'])) {
-                if(strlen($voter->nik)<3){
-                    echo "-";
-                }else{
-                $str_end_nik = substr($voter->nik,-3);
-                ?><?="***".$str_end_nik?>
-                <?php }} else { echo $voter->nik; }?>
-            </td>
-            <td><?php if (!isset($_SESSION['user_logged'])) {
-                $str_end = substr($voter->passport_no,-3);
-                ?><?="*****".$str_end?>
-				<?php } else { echo $voter->passport_no; }?>
-            </td>
-            <td><?=$voter->fullname ?></td>
-            <td><?=$voter->gender == "Female" ? "Perempuan" : "Laki-laki"?></td>
-            <td><?= $voter->is_verified == 0 ? 'Belum Terverifikasi' : 'Terverifikasi' ?></td>
-            <td><?php if (isset($_SESSION['user_logged'])) {?>
+			 <td><?php if (isset($_SESSION['user_logged'])) {?>
 					<a href="#" class="btn btn-info" data-toggle="modal" data-target="#confirmModal" 
                     data-status="admin" 
                     data-passport_no="<?= $voter->passport_no; ?>"
@@ -107,9 +92,26 @@
                     >Verifikasi</a>
                    
 				<?php } else { ?>
-					<a href="#" data-toggle="modal" data-target="#confirmModal" data-passport_no="<?= md5($voter->passport_no); ?>">Edit</a>
+					<a href="#" data-toggle="modal" data-target="#confirmModal" data-uuid="<?=$voter->uuid; ?>" data-passport_no="<?= md5($voter->passport_no); ?>">Edit</a>
 				<?php } ?>
 			</td>
+            <td><?php if (!isset($_SESSION['user_logged'])) {
+                if(strlen($voter->nik)<3){
+                    echo "-";
+                }else{
+                $str_end_nik = substr($voter->nik,-3);
+                ?><?="***".$str_end_nik?>
+                <?php }} else { echo $voter->nik; }?>
+            </td>
+            <td><?php if (!isset($_SESSION['user_logged'])) {
+                $str_end = substr($voter->passport_no,-3);
+                ?><?="*****".$str_end?>
+				<?php } else { echo $voter->passport_no; }?>
+            </td>
+            <td><?=$voter->fullname ?></td>
+            <td><?=$voter->gender == "Female" ? "Perempuan" : "Laki-laki"?></td>
+            <td><?= $voter->is_verified == 0 ? 'Belum Terverifikasi' : 'Terverifikasi' ?></td>
+          
         </tr>
         <?php
         $a = $a+1;
@@ -118,12 +120,13 @@
         <thead>
         <tr align="center">
             <th>No</th>
+			 <th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Edit<?php } ?></th>
             <th>NIK</th>
             <th>Nomor Paspor</th>
             <th>Nama Lengkap</th>
             <th>Jenis Kelamin</th>
             <th>Status</th>
-            <th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Edit<?php } ?></th>
+           
         </tr>
         </thead>
     </table>
@@ -303,6 +306,7 @@
 		$('#confirmModal').on('show.bs.modal', function(e) {
 			$('#errorModal').css('display','none');
 			var passport_no = $(e.relatedTarget).data('passport_no');
+			var uuid = $(e.relatedTarget).data('uuid');
             var status = $(e.relatedTarget).data('status');
             if(status=='admin'){
                 document.getElementById("m_pasport_no").innerHTML = $(e.relatedTarget).data('passport_no');
@@ -370,21 +374,21 @@
 
 			$("#submitModal").click(function () {
 				if (passport_no == $.md5($("#passport_no").val())) {
-					window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + $("#passport_no").val()+"/<?php if($referral)echo $referral ?>"; 
+					window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + uuid+"/<?php if($referral)echo $referral ?>"; 
 				} else {
 					$('#errorModal').css('display','block');
 				}
 			});
 
             $("#UbahDataModal").click(function () {
-                window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + passport_no; 
+                window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + uuid; 
             });
 
              $("#HapusDataModal").click(function () {
                 var result = confirm("Yakin ingin menghapus?");
                 if (result) {
                     //Logic to delete the item
-                    window.location.href = "<?php echo base_url(); ?>voterManagement/delete/" + passport_no; 
+                    window.location.href = "<?php echo base_url(); ?>voterManagement/delete/" + uuid; 
                 }
             });
 
@@ -392,7 +396,7 @@
                 if($(e.relatedTarget).data('is_verified')=='2'){
                     alert("Pemilih Sudah Verified");
                 }else{
-                    window.location.href = "<?php echo base_url(); ?>voterManagement/verifyVoter/" + passport_no; 
+                    window.location.href = "<?php echo base_url(); ?>voterManagement/verifyVoter/" + uuid; 
                 }
                 
             });

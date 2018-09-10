@@ -100,10 +100,12 @@ class VoterManagement extends CI_Controller {
 		if (isset($_POST['register']) || isset($_POST['update'])) {
 			//var_dump($_POST);
 			$passport_no = $_POST['passport_no'];
+			$uuid = $_POST['uuid'];
 
 			//check user in database
 			$this->load->model("Voter_m");
-			$user = $this->Voter_m->exist($passport_no);
+			$user = $this->Voter_m->exist($uuid);
+			$userpassport = $this->Voter_m->existpassport($passport_no);
 
 			//untuk ketentuan upload
 			$config['upload_path'] = './assets/idimages/'; //path folder
@@ -120,6 +122,7 @@ class VoterManagement extends CI_Controller {
 
 
 					$data = array(
+					    'uuid' => $_POST['uuid'],
 						'nik' => $_POST['nik'],
 						'passport_no' => $_POST['passport_no'],
 						'editor_phone' => $_POST['editor_phone'],
@@ -138,7 +141,7 @@ class VoterManagement extends CI_Controller {
 					);
 
 						if (isset($_POST['register'])) {
-							if (!is_null($user)) {
+							if (!is_null($userpassport)) {
 								//temporary message
 								$this->session->set_flashdata("error", "Registrasi gagal. Pemilih telah terdaftar!");
 
@@ -259,11 +262,11 @@ class VoterManagement extends CI_Controller {
 				'script' => $this->recaptcha->getScriptTag(),
 			);
 			if($this->uri->segment(3)){
-				$passport_no = $this->uri->segment(3);
+				$uuid = $this->uri->segment(3);
 
 				//check user in database
 				$this->load->model("Voter_m");
-				$user = $this->Voter_m->exist($passport_no);
+				$user = $this->Voter_m->exist($uuid);
 
 				$data['user'] = $user;
 				$data['status'] = "update";
@@ -281,9 +284,9 @@ class VoterManagement extends CI_Controller {
 //        }
 	}
 
-	public function delete($passport_no){
+	public function delete($uuid){
 		$this->load->model("Voter_m");
-		$result=$this->Voter_m->delete($passport_no);
+		$result=$this->Voter_m->delete($uuid);
 		
 			if($result){
 			$this->session->set_flashdata('success_msg', 'Data sudah terhapus');
@@ -295,7 +298,7 @@ class VoterManagement extends CI_Controller {
 
 	public function verifyVoter($passport_no){
 		$this->load->model("Voter_m");
-		$result=$this->Voter_m->verifyVoter($passport_no);
+		$result=$this->Voter_m->verifyVoter($uuid);
 		
 			if($result){
 			$this->session->set_flashdata('success_msg', 'Data sudah terverifikasi');

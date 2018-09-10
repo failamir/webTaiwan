@@ -312,7 +312,18 @@ class Voter_m extends CI_Model {
         $this->date_modified = $date_modified;
     }
 
-    public function exist($passport_no) {
+    public function exist($uuid) {
+        $this->db->select('*');
+        $this->db->from('voters');
+        $this->db->where(array('uuid' => $uuid));
+        $query = $this->db->get();
+
+        $user = $query->row();
+        return $user;
+
+    }
+	
+  public function existpassport($passport_no) {
         $this->db->select('*');
         $this->db->from('voters');
         $this->db->where(array('passport_no' => $passport_no));
@@ -333,12 +344,12 @@ class Voter_m extends CI_Model {
     }
 
 	public function update($data) {
-		$this->db->where('passport_no', $data['passport_no']);
+		$this->db->where('uuid', $data['uuid']);
 		$this->db->update('voters', $data);
 		$updated_status = $this->db->affected_rows();
 
 		if($updated_status):
-			return $data['passport_no'];
+			return $data['uuid'];
 		else:
 			return false;
 		endif;
@@ -370,8 +381,8 @@ class Voter_m extends CI_Model {
         return $query->num_rows();
     }
 
-    public function delete($passport_no){
-        $this->db->where('passport_no',$passport_no);
+    public function delete($uuid){
+        $this->db->where('uuid',$uuid);
         $this->db->delete('voters');
             if($this->db->affected_rows() >0){
             return true;
@@ -381,8 +392,8 @@ class Voter_m extends CI_Model {
     
     }
 
-    public function verifyVoter($passport_no){
-        $this->db->where('passport_no',$passport_no);
+    public function verifyVoter($uuid){
+        $this->db->where('passport_no',$uuid);
         $data = array('is_verified' => 2);    
         $this->db->update('voters', $data); 
             if($this->db->affected_rows() >0){

@@ -32,6 +32,7 @@
 		</div>
 
 		<input type="hidden" name="status_verifikasi" id="status_verifikasi">
+			<input type="hidden" name="uuid" id="uuid">
 
 		<div class="form-group row">
 			<div class="col-sm-5"><label for="passport_no">Nomor Paspor:</label></div>
@@ -246,11 +247,11 @@
 		}, false);
 
 		<?php if (isset($user)) { ?>
+		$("#uuid").val("<?= $user['uuid'] ?>");
 		$("#nik").val("<?= $user['nik'] ?>");
 		$("#editor_phone").val("<?php if($user['editor_phone']=='')echo($referral);echo($user['editor_phone']) ?>");
 		$("#status_verifikasi").val("<?= $user['is_verified'] ?>");
 		$("[name='passport_no']").val("<?= $user['passport_no'] ?>");
-		$("#passport_no").prop('disabled', true);
 		$("#fullname").val("<?= $user['fullname'] ?>");
 		$("#phone_number").val("<?= $user['phone_number'] ?>");
 		$("#line_id").val("<?= $user['line_id'] ?>");
