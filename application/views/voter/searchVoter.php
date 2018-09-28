@@ -22,6 +22,7 @@
 <div class="container">
     <div class="page-header">
         <h1>Cari Pemilih</h1>
+        <h3>Pendaftaran pemilih akan ditutup tanggal 14 Oktober 2018</h3>
     </div>
     <?php if(isset($_SESSION['success'])) { ?>
         <div class="alert alert-success alert-dismissible fade show">
@@ -37,15 +38,9 @@
     <?php } ?>
     <p><?php if($referral)echo "(referral kode: ".$referral.")" ?>  Masukkan nama atau nomer paspor/SPLP pemilih :</p>
     <form action="" class="searchForm" method="post" novalidate>
-        <div class="form-group">
-            <select class="form-control" id="searchBy" name="searchBy">
-                <option value="name">Nama</option>
-                <option value="passport">Nomor Paspor</option>
-            </select>
-        </div>
 
         <div class="form-group">
-            <input class="form-control" name="searchVal" id="searchVal" type="searchVal" placeholder="minimal 4 huruf" minlength="4" required>
+            <input class="form-control" name="searchVal" id="searchVal" type="searchVal" placeholder="Contoh: Yayat atau B1234567, minimal 4 huruf" minlength="4" required>
             <div class="invalid-feedback">
                 Mohon masukkan pencarian dengan benar. Minimal 4 digit kata kunci.
             </div>
@@ -53,7 +48,7 @@
 
         <div>
             <div class="my-2 my-lg-0">
-            <button class="btn btn-primary" name="search">Search</button>
+            <button class="btn btn-primary" name="search">Cari</button>
             <a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>"><button class="btn btn-success my-2 my-sm-0" type="button">Daftar Baru</button></a>
         </div>
         </div>

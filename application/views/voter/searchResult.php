@@ -1,6 +1,7 @@
 <div class="container">
     <div class="page-header">
         <h1>Hasil Pencarian Pemilih</h1>
+        <h3>Pendaftaran pemilih akan ditutup tanggal 14 Oktober 2018</h3>
     </div>
     <?php if(isset($_SESSION['success'])) { ?>
         <div class="alert alert-success alert-dismissible fade show">
@@ -16,22 +17,8 @@
     <?php } ?>
     <p><?php if($referral)echo "(referral kode: ".$referral.")" ?> Masukkan nama atau nomer paspor/SPLP pemilih :</p>
     <form action="" class="searchForm" method="post" novalidate>
-        <div class="form-group">
-            <select class="form-control" id="searchBy" name="searchBy">
-                <?php if($searchBy == 'name') { ?>
-                    <option value="name" selected>Nama</option>
-                    <option value="passport">Nomor Paspor</option>
-                    <?php
-                } else { ?>
-                    <option value="name">Nama</option>
-                    <option value="passport" selected>Nomor Paspor</option>
-                    <?php
-                };?>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <input class="form-control" value="<?=$searchVal?>" name="searchVal" id="searchVal" type="searchVal" placeholder="contoh: Dyah atau B1234567, minimal 4 huruf" minlength="4" required>
+         <div class="form-group">
+            <input class="form-control" value="<?=$searchVal?>" name="searchVal" id="searchVal" type="searchVal" placeholder="Contoh: Jefferson atau B1234567, minimal 4 huruf" minlength="4" required>
             <div class="invalid-feedback">
                 Mohon masukkan pencarian dengan benar.
             </div>
@@ -53,13 +40,15 @@
         <thead>
         <tr align="center">
             <th>No</th>
-			<th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Edit<?php } ?></th>
+            <th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Edit<?php } ?></th>
             <th>NIK</th>
             <th>Nomor Paspor</th>
             <th>Nama Lengkap</th>
+            <th>Tempat, Tanggal Lahir</th>
             <th>Jenis Kelamin</th>
-            <th>Status</th>
-			
+            <th>Alamat</th>
+            <th>Cara Pilih</th>
+            
         </tr>
         </thead>
         <tbody>
@@ -69,8 +58,8 @@
         foreach ($voters as $voter) { ?>
         <tr align="center">
             <td><?=$a ?></td>
-			 <td><?php if (isset($_SESSION['user_logged'])) {?>
-					<a href="#" class="btn btn-info" data-toggle="modal" data-target="#confirmModal" 
+             <td><?php if (isset($_SESSION['user_logged'])) {?>
+                    <a href="#" class="btn btn-info" data-toggle="modal" data-target="#confirmModal" 
                     data-status="admin" 
                     data-passport_no="<?= $voter->passport_no; ?>"
                     data-fullname="<?= $voter->fullname; ?>"
@@ -91,10 +80,10 @@
                     data-date_created="<?= $voter->date_created; ?>"
                     >Verifikasi</a>
                    
-				<?php } else { ?>
-					<a href="#" data-toggle="modal" data-target="#confirmModal" data-uuid="<?=$voter->uuid; ?>" data-passport_no="<?= md5($voter->passport_no); ?>">Edit</a>
-				<?php } ?>
-			</td>
+                <?php } else { if(preg_match('/\d{4}/', $voter->birthdate, $matches)){$year=$matches[0]; }else{ $year="";}  ?>
+                    <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmModal" data-birth_year="<?= md5($year); ?>" data-uuid="<?=$voter->uuid; ?>" data-passport_no="<?= md5($voter->passport_no); ?>">Edit</a>
+                <?php } ?>
+            </td>
             <td><?php if (!isset($_SESSION['user_logged'])) {
                 if(strlen($voter->nik)<3){
                     echo "-";
@@ -106,12 +95,33 @@
             <td><?php if (!isset($_SESSION['user_logged'])) {
                 $str_end = substr($voter->passport_no,-3);
                 ?><?="*****".$str_end?>
-				<?php } else { echo $voter->passport_no; }?>
+                <?php } else { echo $voter->passport_no; }?>
             </td>
             <td><?=$voter->fullname ?></td>
-            <td><?=$voter->gender == "Female" ? "Perempuan" : "Laki-laki"?></td>
-            <td><?= $voter->is_verified == 0 ? 'Belum Terverifikasi' : 'Terverifikasi' ?></td>
-          
+            <td><?php
+            
+            if($voter->birthplace == ''){
+                echo '<p><font color="red">(tolong di update)</font>,</p>';
+            }else{
+                echo $voter->birthplace.',';
+            }
+            
+            if(preg_match("/\d{4}/", $voter->birthdate, $year_matches)){
+                 $year_found = $year_matches[0];
+                 echo str_replace($year_found,"XXXX", $voter->birthdate);
+            }else{
+                echo '<p><font color="red">(tolong di update)</font></p>';
+            }
+            
+            
+            //=(($voter->birthplace == '') ? '<p><font color="red">(tolong di update)</font></p>' : $voter->birthplace).", ".(($voter->birthdate == '') ? '<p><font color="red">(tolong di update)</font></p>' : $voter->birthdate) 
+            
+            ?></td>
+            <td><?=($voter->gender == "Female")||($voter->gender == "P") ? "Perempuan" : "Laki-laki"?></td>
+            <td><?= ((strlen($voter->address) <= 12) ? '<p><font color="red">(tolong di update)</font></p>' : $voter->address) ?></td>
+            <td><?=$voter->kpps_type ?></td>
+            <!--<td><?= (($voter->is_verified == 0) ? 'Belum Terverifikasi' : 'Terverifikasi') ?></td>-->
+           
         </tr>
         <?php
         $a = $a+1;
@@ -120,13 +130,14 @@
         <thead>
         <tr align="center">
             <th>No</th>
-			 <th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Edit<?php } ?></th>
+            <th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Edit<?php } ?></th>
             <th>NIK</th>
             <th>Nomor Paspor</th>
             <th>Nama Lengkap</th>
+            <th>Tempat, Tanggal Lahir</th>
             <th>Jenis Kelamin</th>
-            <th>Status</th>
-           
+            <th>Alamat</th>
+            
         </tr>
         </thead>
     </table>
@@ -258,10 +269,10 @@
             <!-- Modal body -->
             <div class="modal-body">
                 <div class="alert alert-danger alert-dismissible" role="alert" id="errorModal">
-                    Nomor paspor yang Anda masukkan tidak sesuai.
+                    Tahun kelahiran yang Anda masukkan tidak sesuai dengan data ini.
                 </div>
-                <div class="col-sm-10"><label for="passport_no">Silahkan masukkan nomor paspor Anda: </label></div>
-                <div class="col-sm-10"><input class="form-control" name="passport_no" id="passport_no" type="text" placeholder="contoh: B1234567" required></div>
+                <div class="col-sm-10"><label for="passport_no">Silahkan masukkan Tahun kelahiran Anda: </label></div>
+                <div class="col-sm-10"><input class="form-control" name="passport_no" id="passport_no" type="text" placeholder="contoh: 1999" required></div>
             </div>
 
             <!-- Modal footer -->
@@ -303,10 +314,11 @@
             });
         }, false);
 
-		$('#confirmModal').on('show.bs.modal', function(e) {
-			$('#errorModal').css('display','none');
-			var passport_no = $(e.relatedTarget).data('passport_no');
-			var uuid = $(e.relatedTarget).data('uuid');
+        $('#confirmModal').on('show.bs.modal', function(e) {
+            $('#errorModal').css('display','none');
+            var passport_no = $(e.relatedTarget).data('passport_no');
+            var birth_year= $(e.relatedTarget).data('birth_year');
+            var uuid = $(e.relatedTarget).data('uuid');
             var status = $(e.relatedTarget).data('status');
             if(status=='admin'){
                 document.getElementById("m_pasport_no").innerHTML = $(e.relatedTarget).data('passport_no');
@@ -359,7 +371,7 @@
                 }
 
                 document.getElementById("m_kpps_type").innerHTML = $(e.relatedTarget).data('kpps_type');
-                if($(e.relatedTarget).data('kpps_type')=='KPPS'){
+                if($(e.relatedTarget).data('kpps_type')=='TPS'){
                     document.getElementById("m_kpps_type").innerHTML = 'Datang Ke TPSLN';
                 }else if ($(e.relatedTarget).data('kpps_type')=='POS'){
                     document.getElementById("m_kpps_type").innerHTML = 'Dikirim Pos';
@@ -372,13 +384,13 @@
             }
             
 
-			$("#submitModal").click(function () {
-				if (passport_no == $.md5($("#passport_no").val())) {
-					window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + uuid+"/<?php if($referral)echo $referral ?>"; 
-				} else {
-					$('#errorModal').css('display','block');
-				}
-			});
+            $("#submitModal").click(function () {
+                if (birth_year == $.md5($("#passport_no").val())) {
+                window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + uuid+"/<?php if($referral)echo $referral ?>"; 
+                } else {
+                    $('#errorModal').css('display','block');
+                }
+            });
 
             $("#UbahDataModal").click(function () {
                 window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + uuid; 
@@ -395,23 +407,23 @@
             $("#VerifikasiDataModal").click(function () {
                 if($(e.relatedTarget).data('is_verified')=='2'){
                     alert("Pemilih Sudah Verified");
-                }else{
+                }else{reg
                     window.location.href = "<?php echo base_url(); ?>voterManagement/verifyVoter/" + uuid; 
                 }
                 
             });
              
 
-		});
+        });
     })();
 
 </script>
 
 <?php } else { ?>
 
-	<p>Nama/Nomor paspor anda belum terdaftar, silahkan daftar  <a href="<?php echo base_url(); ?>voterManagement/register">disini</a>.</p>
+    <p>Nama/Nomor paspor anda belum terdaftar, silahkan daftar  <a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>">disini</a>.</p>
 </div>
-	</body>
+    </body>
 <?php } ?>
 
 </html>

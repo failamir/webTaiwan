@@ -23,7 +23,7 @@
 		
 		<div class="form-group row">
 			<div class="col-sm-5"><label for="editor_phone">Referral (Abaikan kalau tidak tahu):</label></div>
-			<div class="col-sm-7"><input value="<?php if(isset($referral))echo $referral ?>" class="form-control" name="editor_phone" id="editor_phone" type="text"></div>
+			<div class="col-sm-7"><input value="<?php if(isset($referral))echo $referral ?>" class="form-control" name="editor_phone" id="editor_phone" disabled="disabled" type="text"></div>
 		</div>
 
 		<div class="form-group row">
@@ -89,10 +89,40 @@
 
 		<div class="form-group row">
 			<div class="col-sm-5"><label for="birthdate">Tanggal Lahir:</label></div>
-			<div class="col-sm-7"><input class="form-control" name="birthdate" id="birthdate" type="date" required>
-				<div class="invalid-feedback">
-					Mohon masukkan tanggal lahir dengan benar.
+			<div class="col-sm-7">
+				<div class="row">
+					<div class="col-sm">
+						<select class="form-control" id="birthday" name="birthday" required>
+						<option selected="" value=""> Tanggal </option>
+						<?php 
+							for ($tanggal_val = 1; $tanggal_val <= 31; $tanggal_val++) {
+  								echo '<option value="'.$tanggal_val.'">'.$tanggal_val.'</option>';
+							}
+						?>
+						</select>
+					</div>
+					<div class="col-sm">
+						<select class="form-control" id="birthmonth" name="birthmonth" required>
+						<option selected="" value=""> Bulan </option>
+						<?php 
+							for ($bulan_val = 1; $bulan_val <= 12; $bulan_val++) {
+  								echo '<option value="'.$bulan_val.'">'.$bulan_val.'</option>';
+							}
+						?>
+						</select>
+					</div>
+					<div class="col-sm">
+						<select class="form-control" id="birthyear" name="birthyear" required>
+						<option selected="" value=""> Tahun </option>
+						<?php 
+							for ($tahun_val = 2003; $tahun_val >= 1900; $tahun_val--) {
+  								echo '<option value="'.$tahun_val.'">'.$tahun_val.'</option>';
+							}
+						?>
+						</select>
+					</div>
 				</div>
+				
 			</div>
 		</div>
 
