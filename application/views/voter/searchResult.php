@@ -1,7 +1,7 @@
 <div class="container">
     <div class="page-header">
         <h1>Hasil Pencarian Pemilih</h1>
-        <h3>Pendaftaran pemilih akan ditutup tanggal 14 Oktober 2018</h3>
+        <h3>Pendaftaran pemilih akan ditutup tanggal 15 Oktober 2018</h3>
     </div>
     <?php if(isset($_SESSION['success'])) { ?>
         <div class="alert alert-success alert-dismissible fade show">
@@ -36,15 +36,20 @@
                 {
         ?>
     </div>
-    <table class="table table-striped table-hover">
+      Jika status anda <font style="background:yellow" color="green">"Mohon dicek"</font> atau <font color="red">"Kurang Lengkap"</font> silahkan klik tombol "Ubah" untuk mengecek atau melengkapi data.
+     <hr>
+     ----> Geser ke kanan untuk melihat lebih detil
+    
+    <div class="table-responsive-sm" >    
+    <table class="table table-sm table-striped  w-auto">
         <thead>
         <tr align="center">
             <th>No</th>
-            <th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Edit<?php } ?></th>
-            <th>NIK</th>
-            <th>Nomor Paspor</th>
+            <th>Status</th>
+            <th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Aksi<?php } ?></th>
             <th>Nama Lengkap</th>
-            <th>Tempat, Tanggal Lahir</th>
+            <th>Nomor Paspor</th>
+            <th>Tempat Lahir</th>
             <th>Jenis Kelamin</th>
             <th>Alamat</th>
             <th>Cara Pilih</th>
@@ -58,9 +63,31 @@
         foreach ($voters as $voter) { ?>
         <tr align="center">
             <td><?=$a ?></td>
+            <td>
+            <?php   if (!isset($_SESSION['user_logged'])) {
+                        // if(strlen($voter->nik)<3){
+                        //     echo "-";
+                        // }else{
+                        // $str_end_nik = substr($voter->nik,-3);
+                        // echo "***".$str_end_nik;
+                        // }
+                        if($voter->birthdate=='' || $voter->birthplace=='' || $voter->address==''){
+                            echo'<p><font color="red">Kurang Lengkap</font></p>';
+                        }else{
+                            if($voter->date_created==='' && $voter->date_modified===''){
+                                echo'<p style="background:yellow"><font color="green">Mohon dicek</font></p>';
+                            }else{
+                                echo'<p><font color="green">Data Lengkap</font></p>';    
+                            }
+                            
+                        }
+                    } else { echo $voter->nik; }
+            ?>
+            </td>
              <td><?php if (isset($_SESSION['user_logged'])) {?>
                     <a href="#" class="btn btn-info" data-toggle="modal" data-target="#confirmModal" 
                     data-status="admin" 
+                    data-uuid="<?=$voter->uuid; ?>"
                     data-passport_no="<?= $voter->passport_no; ?>"
                     data-fullname="<?= $voter->fullname; ?>"
                     data-is_Verified="<?= $voter->is_verified; ?>"
@@ -80,38 +107,41 @@
                     data-date_created="<?= $voter->date_created; ?>"
                     >Verifikasi</a>
                    
-                <?php } else { if(preg_match('/\d{4}/', $voter->birthdate, $matches)){$year=$matches[0]; }else{ $year="";}  ?>
-                    <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmModal" data-birth_year="<?= md5($year); ?>" data-uuid="<?=$voter->uuid; ?>" data-passport_no="<?= md5($voter->passport_no); ?>">Edit</a>
+                <?php } else { 
+
+                    if($voter->birthdate==''){
+                         $year="";
+                    }else{
+                         $year=str_replace(array('#','-','0'), '', $voter->birthdate);
+                    }  
+
+                    ?>
+                    <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmModal" data-birth_year="<?= $year; ?>" data-uuid="<?=$voter->uuid; ?>" data-passport_no="<?= $voter->passport_no; ?>">Ubah</a>
                 <?php } ?>
             </td>
-            <td><?php if (!isset($_SESSION['user_logged'])) {
-                if(strlen($voter->nik)<3){
-                    echo "-";
-                }else{
-                $str_end_nik = substr($voter->nik,-3);
-                ?><?="***".$str_end_nik?>
-                <?php }} else { echo $voter->nik; }?>
-            </td>
+            
+            
+            <td><?=$voter->fullname ?></td>
             <td><?php if (!isset($_SESSION['user_logged'])) {
                 $str_end = substr($voter->passport_no,-3);
                 ?><?="*****".$str_end?>
                 <?php } else { echo $voter->passport_no; }?>
             </td>
-            <td><?=$voter->fullname ?></td>
+            
             <td><?php
             
             if($voter->birthplace == ''){
                 echo '<p><font color="red">(tolong di update)</font>,</p>';
             }else{
-                echo $voter->birthplace.',';
+                echo $voter->birthplace.' ';
             }
             
-            if(preg_match("/\d{4}/", $voter->birthdate, $year_matches)){
-                 $year_found = $year_matches[0];
-                 echo str_replace($year_found,"XXXX", $voter->birthdate);
-            }else{
-                echo '<p><font color="red">(tolong di update)</font></p>';
-            }
+            // if(preg_match("/\d{4}/", $voter->birthdate, $year_matches)){
+            //      $year_found = $year_matches[0];
+            //      echo str_replace($year_found,"XXXX", $voter->birthdate);
+            // }else{
+            //     echo '<p><font color="red">(tolong di update)</font></p>';
+            // }
             
             
             //=(($voter->birthplace == '') ? '<p><font color="red">(tolong di update)</font></p>' : $voter->birthplace).", ".(($voter->birthdate == '') ? '<p><font color="red">(tolong di update)</font></p>' : $voter->birthdate) 
@@ -130,17 +160,19 @@
         <thead>
         <tr align="center">
             <th>No</th>
-            <th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Edit<?php } ?></th>
-            <th>NIK</th>
-            <th>Nomor Paspor</th>
+            <th>Status</th>
+            <th><?php if (isset($_SESSION['user_logged'])) {?>Verifikasi<?php } else { ?>Aksi<?php } ?></th>
             <th>Nama Lengkap</th>
-            <th>Tempat, Tanggal Lahir</th>
+            <th>Nomor Paspor</th>
+            <th>Tempat lahir</th>
             <th>Jenis Kelamin</th>
             <th>Alamat</th>
+            <th>Cara Pilih</th>
             
         </tr>
         </thead>
     </table>
+    </div>
     <div id="pagination">  
         <ul class="pagination">
 
@@ -272,7 +304,41 @@
                     Tahun kelahiran yang Anda masukkan tidak sesuai dengan data ini.
                 </div>
                 <div class="col-sm-10"><label for="passport_no">Silahkan masukkan Tahun kelahiran Anda: </label></div>
-                <div class="col-sm-10"><input class="form-control" name="passport_no" id="passport_no" type="text" placeholder="contoh: 1999" required></div>
+                <div class="col-sm-10">
+                    <div class="col-sm">
+                        <select class="form-control" id="birthday" name="birthday" required>
+                        <option selected="" value=""> Tanggal </option>
+                        <?php 
+                            for ($tanggal_val = 1; $tanggal_val <= 31; $tanggal_val++) {
+                                echo '<option value="'.$tanggal_val.'">'.$tanggal_val.'</option>';
+                            }
+                        ?>
+                        </select>
+                    </div>
+                    <div class="col-sm"><br></div>
+                    <div class="col-sm">
+                        <select class="form-control" id="birthmonth" name="birthmonth" required>
+                        <option selected="" value=""> Bulan </option>
+                        <?php 
+                            for ($bulan_val = 1; $bulan_val <= 12; $bulan_val++) {
+                                echo '<option value="'.$bulan_val.'">'.$bulan_val.'</option>';
+                            }
+                        ?>
+                        </select>
+                    </div>
+                    <div class="col-sm"><br></div>
+                    <div class="col-sm">
+                        <select class="form-control" id="birthyear" name="birthyear" required>
+                        <option selected="" value=""> Tahun </option>
+                        <?php 
+                            for ($tahun_val = 2003; $tahun_val >= 1900; $tahun_val--) {
+                                echo '<option value="'.$tahun_val.'">'.$tahun_val.'</option>';
+                            }
+                        ?>
+                        </select>
+                    </div>
+                    <!-- <input class="form-control" name="passport_no" id="passport_no" type="text" placeholder="contoh: 1999" required> -->
+                </div>
             </div>
 
             <!-- Modal footer -->
@@ -317,6 +383,9 @@
         $('#confirmModal').on('show.bs.modal', function(e) {
             $('#errorModal').css('display','none');
             var passport_no = $(e.relatedTarget).data('passport_no');
+            // var birth_year= $(e.relatedTarget).data('birthday').concat($(e.relatedTarget).data('birthmonth'),$(e.relatedTarget).data('birthyear'));
+            //     birth_year=birth_year.replace(/0/gi, "");
+
             var birth_year= $(e.relatedTarget).data('birth_year');
             var uuid = $(e.relatedTarget).data('uuid');
             var status = $(e.relatedTarget).data('status');
@@ -383,9 +452,13 @@
                 document.getElementById("m_date_created").innerHTML = $(e.relatedTarget).data('date_created');
             }
             
-
+  // var birth_year= $(e.relatedTarget).data('birthday').concat($(e.relatedTarget).data('birthmonth'),$(e.relatedTarget).data('birthyear'));
+            //     birth_year=birth_year.replace(/0/gi, "");
             $("#submitModal").click(function () {
-                if (birth_year == $.md5($("#passport_no").val())) {
+                var hasilInputan=$("#birthday").val().concat($("#birthmonth").val(),$("#birthyear").val());
+                hasilInputan=hasilInputan.replace(/0/gi, "");
+                //alert (hasilInputan+' ternyata aslinya '+birth_year);
+                if (birth_year == hasilInputan || birth_year=='') {
                 window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + uuid+"/<?php if($referral)echo $referral ?>"; 
                 } else {
                     $('#errorModal').css('display','block');
@@ -397,7 +470,7 @@
             });
 
              $("#HapusDataModal").click(function () {
-                var result = confirm("Yakin ingin menghapus?");
+                var result = confirm("Yakin ingin menghapus?"+ uuid);
                 if (result) {
                     //Logic to delete the item
                     window.location.href = "<?php echo base_url(); ?>voterManagement/delete/" + uuid; 
@@ -407,7 +480,7 @@
             $("#VerifikasiDataModal").click(function () {
                 if($(e.relatedTarget).data('is_verified')=='2'){
                     alert("Pemilih Sudah Verified");
-                }else{reg
+                }else{
                     window.location.href = "<?php echo base_url(); ?>voterManagement/verifyVoter/" + uuid; 
                 }
                 

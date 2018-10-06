@@ -22,7 +22,7 @@
 <div class="container">
     <div class="page-header">
         <h1>Cari Pemilih</h1>
-        <h3>Pendaftaran pemilih akan ditutup tanggal 14 Oktober 2018</h3>
+        <h3>Pendaftaran pemilih akan ditutup tanggal 15 Oktober 2018</h3>
     </div>
     <?php if(isset($_SESSION['success'])) { ?>
         <div class="alert alert-success alert-dismissible fade show">
@@ -36,11 +36,10 @@
             <?php echo $_SESSION['error']; ?>
         </div>
     <?php } ?>
-    <p><?php if($referral)echo "(referral kode: ".$referral.")" ?>  Masukkan nama atau nomer paspor/SPLP pemilih :</p>
+    <p><?php if($referral)echo "(referral kode: ".$referral.")" ?> Sebelum mendaftar, silahkan masukkan nama atau nomor paspor anda untuk mengecek:</p>
     <form action="" class="searchForm" method="post" novalidate>
-
         <div class="form-group">
-            <input class="form-control" name="searchVal" id="searchVal" type="searchVal" placeholder="Contoh: Yayat atau B1234567, minimal 4 huruf" minlength="4" required>
+             <input class="form-control" name="searchVal" id="searchVal" type="searchVal" placeholder="Contoh: Yayat atau B1234567, minimal 4 huruf" minlength="4" required>
             <div class="invalid-feedback">
                 Mohon masukkan pencarian dengan benar. Minimal 4 digit kata kunci.
             </div>
@@ -49,12 +48,14 @@
         <div>
             <div class="my-2 my-lg-0">
             <button class="btn btn-primary" name="search">Cari</button>
-            <a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>"><button class="btn btn-success my-2 my-sm-0" type="button">Daftar Baru</button></a>
+            <!--<a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>"><button class="btn btn-success my-2 my-sm-0" type="button">Daftar Baru</button></a>-->
         </div>
         </div>
     </form>
     <br>
-    <p>Jika nama yang Anda cari tidak ada, silahkan daftarkan <a href="<?php echo base_url(); ?>voterManagement/register">disini</a>.</p>
+    <p> Klik cari untuk memulai pencarian. Jika nantinya nama atau paspor anda belum muncul, silahkan Daftar Baru.
+    <!--<a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>">disini</a>.-->
+    </p>
 </div>
 
 <!-- Optional JavaScript -->

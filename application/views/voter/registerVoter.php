@@ -27,7 +27,7 @@
 		</div>
 
 		<div class="form-group row">
-			<div class="col-sm-5"><label for="nik">NIK/Nomor Induk Kependudukan Indonesia (opsional):</label></div>
+			<div class="col-sm-5"><label for="nik">NIK/Nomor Induk Kependudukan Indonesia (Tidak harus):</label></div>
 			<div class="col-sm-7"><input class="form-control" name="nik" id="nik" type="text"></div>
 		</div>
 
@@ -65,12 +65,12 @@
 		</div>
 
 		<div class="form-group row">
-			<div class="col-sm-5"><label for="line_id">Line messenger ID (opsional):</label></div>
+			<div class="col-sm-5"><label for="line_id">Line messenger ID (Tidak harus):</label></div>
 			<div class="col-sm-7"><input class="form-control" name="line_id" id="line_id" type="text"></div>
 		</div>
 
 		<div class="form-group row">
-			<div class="col-sm-5"><label for="email">Email (opsional):</label></div>
+			<div class="col-sm-5"><label for="email">Email (Tidak harus):</label></div>
 			<div class="col-sm-7"><input class="form-control" name="email" id="email" type="email">
 				<div class="invalid-feedback">
 					Mohon masukkan email dengan benar.
@@ -178,6 +178,17 @@
 		</div>
 
 		<div class="form-group row">
+			<div class="col-sm-5"><label for="kpps_type">Jenis KPPS (cara pemilihan):</label></div>
+			<div class="col-sm-7"><select mutiple="multiple" id="kpps_type" name="kpps_type" class="form-control" required>
+					<option selected="" value=""> -- Pilih salah satu -- </option>
+					<option value="TPS">Datang ke TPSLN</option>
+					<option value="POS">Kirim via POS</option>
+					<option value="KSK">Kotak Suara Keliling (Khusus ABK)</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group row">
 			<div class="col-sm-5"><label for="address">Alamat domisili di Taiwan:</label></div>
 			<div class="col-sm-7"><textarea class="form-control" name="address" id="address" type="text" value="<?= isset($user) ? $user['address'] : '' ?>" required></textarea>
 				<div class="invalid-feedback">
@@ -186,16 +197,6 @@
 			</div>
 		</div>
 
-		<div class="form-group row">
-			<div class="col-sm-5"><label for="kpps_type">Jenis KPPS (cara pemilihan):</label></div>
-			<div class="col-sm-7"><select mutiple="multiple" id="kpps_type" name="kpps_type" class="form-control" required>
-					<option selected="" value=""> -- Pilih salah satu -- </option>
-					<option value="KPPS">Datang ke TPSLN</option>
-					<option value="POS">Kirim via POS</option>
-					<option value="KSK">Kotak Suara Keliling (Khusus ABK)</option>
-				</select>
-			</div>
-		</div>
 
 		<div class="form-group row">
 			<div class="col-sm-5"><label for="disability_type">Jenis Disabilitas:</label></div>
@@ -213,7 +214,8 @@
 
 		<div class="form-group row">
 			<div class="col-sm-5"><label for="photo">Upload foto paspor atau KTP atau ARC untuk verifikasi <br>(tipe file: jpg, png & gif, ukuran: maks 2MB):</label></div>
-			<div class="col-sm-7"><input type="file" name="photo" id="photo" style="vertical-align: top;" 	<?php
+			<div class="col-sm-7"><input type="file" name="photo" id="photo" style="vertical-align: top;" 	
+			<?php
 				if(isset($user)){
 					if(	 $user['is_verified']=='0'){
 						echo 'required';
@@ -222,7 +224,7 @@
 					echo 'required';
 				}
 			?> >
-	<?php
+			<?php
 				if(isset($user)){
 					if(	 $user['is_verified']=='0'){
 						echo 'required atas';
@@ -234,19 +236,18 @@
 			<img src="" name="photo" id="photo2" width="120" height="160" align="right"></div>
 		</div>
 
-		<div class="form-group" id="munculNotif" align="center">
-			<label for="title" class="col-md-10 text-center">Cek mesin atau bukan</label>
-			<div class="col-md-10">
-				<?php echo $widget;?>
-				<?php echo $script;?>
-			</div>
-		</div>
-
+		<!--<div class="form-group" id="munculNotif" align="center">-->
+		<!--	<label for="title" class="col-md-10 text-center">Cek mesin atau bukan</label>-->
+		<!--	<div class="col-md-10">-->
+		<!--		<?php echo $widget;?>-->
+		<!--		<?php echo $script;?>-->
+		<!--	</div>-->
+		<!--</div>-->
 		<div align="center">
 			<!--
             <button class="btn btn-primary" name="register" id="btnSubmit" onclick="return recaptchaCallback();" type="submit request">Registrasi</button>
         -->
-			<button class="btn btn-primary" name="register" id="btnSubmit" type="submit">Kirim</button>
+			<button class="btn btn-primary" name="register" id="btnSubmit" type="submit">Daftar Pemilih</button>
 		</div>
 	</form>
 </div>
@@ -276,7 +277,22 @@
 			});
 		}, false);
 
-		<?php if (isset($user)) { ?>
+		<?php if (isset($user)) { 
+
+			if($user['birthdate']!==''){					
+					if (strpos($user['birthdate'], '-') !== false) {
+						$splitTTLuser=explode("-",$user['birthdate']);
+					}else{
+						$splitTTLuser=explode("#",$user['birthdate']);
+					}
+				?>
+		$("#birthday").val("<?= $splitTTLuser[0] ?>");
+		$("#birthmonth").val("<?= $splitTTLuser[1] ?>");
+		$("#birthyear").val("<?= $splitTTLuser[2] ?>");		
+				<?php
+			}
+
+		?>
 		$("#uuid").val("<?= $user['uuid'] ?>");
 		$("#nik").val("<?= $user['nik'] ?>");
 		$("#editor_phone").val("<?php if($user['editor_phone']=='')echo($referral);echo($user['editor_phone']) ?>");

@@ -30,9 +30,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/register">Daftarkan Pemilih</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/register">Verifikasi Pemilih</a>
-            </li>
         </ul>
         <?php if (isset($_SESSION['user_logged'])) { ?>
             <div class="my-2 my-lg-0">
