@@ -22,7 +22,7 @@
 <div class="container">
     <div class="page-header">
         <h1>Cari Pemilih</h1>
-        <h3>Pendaftaran pemilih akan ditutup tanggal 15 Oktober 2018</h3>
+        <h3>Pendaftaran pemilih tetap (DPT) sudah ditutup tanggal 9 Desember 2018,</h3>
     </div>
     <?php if(isset($_SESSION['success'])) { ?>
         <div class="alert alert-success alert-dismissible fade show">
@@ -36,12 +36,24 @@
             <?php echo $_SESSION['error']; ?>
         </div>
     <?php } ?>
-    <p><?php if($referral)echo "(referral kode: ".$referral.")" ?> Sebelum mendaftar, silahkan masukkan nama atau nomor paspor anda untuk mengecek:</p>
+    <p><?php if($referral)echo "(referral kode: ".$referral.")" ?> Keputusan ini sudah sesuai dengan arahan KPU RI:</p>
     <form action="" class="searchForm" method="post" novalidate>
         <div class="form-group">
-             <input class="form-control" name="searchVal" id="searchVal" type="searchVal" placeholder="Contoh: Yayat atau B1234567, minimal 4 huruf" minlength="4" required>
+             <input class="form-control" name="searchVal" id="searchVal" type="text" placeholder="Contoh: Yayat, minimal 4 huruf" minlength="4" required>
             <div class="invalid-feedback">
                 Mohon masukkan pencarian dengan benar. Minimal 4 digit kata kunci.
+            </div>
+        </div>
+        <div class="form-group">
+             <input class="form-control" name="kotaLahirVal" id="kotaLahirVal" type="hidden" placeholder="Masukkan kota lahir (boleh dikosongkan)" minlength="4">
+            <div class="invalid-feedback">
+                Mohon masukkan kota kelahiran anda.
+            </div>
+        </div>
+        <div class="form-group">
+             <input class="form-control" name="tahunLahirVal" id="tahunLahirVal" type="hidden" placeholder="Masukkan tahun lahir (boleh dikosongkan)" minlength="4">
+            <div class="invalid-feedback">
+                Mohon masukkan tahun kelahiran anda
             </div>
         </div>
 
@@ -53,7 +65,7 @@
         </div>
     </form>
     <br>
-    <p> Klik cari untuk memulai pencarian. Jika nantinya nama atau paspor anda belum muncul, silahkan Daftar Baru.
+    <p> Klik cari untuk memulai pencarian. Jika nantinya nama anda belum muncul, silahkan Daftar Baru.
     <!--<a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>">disini</a>.-->
     </p>
 </div>

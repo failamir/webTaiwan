@@ -27,9 +27,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/search">Cari Pemilih</a>
             </li>
+                <?php if (isset($_SESSION['user_logged'])) { ?>
             <li class="nav-item">
+                <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/verifikasiPemilih">Verifikasi Pemilih</a>
+            </li>
+              <li class="nav-item">
                 <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/register">Daftarkan Pemilih</a>
             </li>
+             <?php } ?>
         </ul>
         <?php if (isset($_SESSION['user_logged'])) { ?>
             <div class="my-2 my-lg-0">

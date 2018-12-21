@@ -22,8 +22,63 @@ class VoterManagement extends CI_Controller {
     	redirect(base_url()."voterManagement/search","refresh");
     	//redirect(base_url(),"refresh");
     }
+    
+    public function verifikasiPemilih(){
+        
+        $this->load->model("Voter_m");
+           
+
+        //konfigurasi pagination
+        $config['base_url'] = base_url() . "/voterManagement/verifikasiPemilih"; //site url
+        $config['total_rows'] = $this->db->count_all('voters'); //total row
+        $config['per_page'] = 10;  //show record per halaman
+        $config["uri_segment"] = 3;  // uri parameter
+        $choice = $config["total_rows"] / $config["per_page"];
+        $config["num_links"] = 15;
+  
+        // Membuat Style pagination untuk BootStrap v4
+      $config['first_link']       = 'First';
+        $config['last_link']        = 'Last';
+        $config['next_link']        = 'Next';
+        $config['prev_link']        = 'Prev';
+        $config['full_tag_open']    = '<div class="pagging text-center"><nav><ul class="pagination justify-content-center">';
+        $config['full_tag_close']   = '</ul></nav></div>';
+        $config['num_tag_open']     = '<li class="page-item"><span class="page-link">';
+        $config['num_tag_close']    = '</span></li>';
+        $config['cur_tag_open']     = '<li class="page-item active"><span class="page-link">';
+        $config['cur_tag_close']    = '<span class="sr-only">(current)</span></span></li>';
+        $config['next_tag_open']    = '<li class="page-item"><span class="page-link">';
+        $config['next_tagl_close']  = '<span aria-hidden="true">&raquo;</span></span></li>';
+        $config['prev_tag_open']    = '<li class="page-item"><span class="page-link">';
+        $config['prev_tagl_close']  = '</span>Next</li>';
+        $config['first_tag_open']   = '<li class="page-item"><span class="page-link">';
+        $config['first_tagl_close'] = '</span></li>';
+        $config['last_tag_open']    = '<li class="page-item"><span class="page-link">';
+        $config['last_tagl_close']  = '</span></li>';
+ 
+        $this->pagination->initialize($config);
+        $data['page'] = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+ 
+        //panggil function get_mahasiswa_list yang ada pada mmodel mahasiswa_model. 
+        $data['data'] = $this->Voter_m->getPemilihVerifikasi($config["per_page"], $data['page']);
+        
+ 
+        $data['pagination'] = $this->pagination->create_links();
+ 
+  
+        
+        	$this->load->view('layout/header');
+			$this->load->view('voter/verifikasi', $data);
+			$this->load->view('layout/footer');
+        
+    }
+    
 
 	public function search() {
+	    
+	    //pemblokiran
+	    // if (isset($_SESSION['user_logged'])) {
+	         
 	    
 		$data["referral"] = $this->uri->segment(4);
 		if (isset($_POST['search']) || $this->uri->segment(3)) {
@@ -33,17 +88,21 @@ class VoterManagement extends CI_Controller {
 			if(preg_match( '/\d/', $_POST['searchVal'] )){
 				$name = "";
 				$passport_no = $_POST['searchVal'];
+				$birthdate = $_POST['tahunLahirVal'];;
+				$birthplace = $_POST['kotaLahirVal'];;
 			} else {
 			    $name = $_POST['searchVal'];
 				$passport_no = "";
+				$birthdate = $_POST['tahunLahirVal'];;
+				$birthplace = $_POST['kotaLahirVal'];;
 			}
 
             //set array for PAGINATION LIBRARY, and show view data according to page.
 			$config = array();
 			$config["base_url"] = base_url() . "/voterManagement/search";
-			$total_row = $this->Voter_m->record_count($name, $passport_no);
+			$total_row = $this->Voter_m->record_count($name, $passport_no, $birthdate, $birthplace);
 			$config["total_rows"] = $total_row;
-			$config["per_page"] = 2000;
+			$config["per_page"] = 1000;
 			$config['use_page_numbers'] = TRUE;
 			$config['num_links'] = $total_row;
 			$config['cur_tag_open'] = '&nbsp;<a class="current">';
@@ -61,7 +120,7 @@ class VoterManagement extends CI_Controller {
 				$offset = 0;
 			}
 
-			$data["voters"] = $this->Voter_m->getAllData($config["per_page"], $offset, $name, $passport_no);
+			$data["voters"] = $this->Voter_m->getAllData($config["per_page"], $offset, $name, $passport_no, $birthdate, $birthplace);
 			$str_links = $this->pagination->create_links();
 			$data["links"] = explode('&nbsp;',$str_links );
 			$data["searchVal"] = $_POST['searchVal'];
@@ -75,10 +134,22 @@ class VoterManagement extends CI_Controller {
 			$this->load->view('voter/searchVoter',$data);
 			$this->load->view('layout/footer');
 		}
+		
+		//penutup pemblokiran
+    // 	}else{
+	   //     	$this->load->view('welcome_message',$data); 
+	   // }
+	    
 
 	}
 
 	public function register() {
+	    
+	        //pemblokiran
+	   //  if (isset($_SESSION['user_logged'])) {
+	         
+	    
+	    
 		if($this->uri->segment(4)){
 			$data["referral"] = $this->uri->segment(4);
 			$data["editor_phone"] = $this->uri->segment(4);
@@ -109,7 +180,7 @@ class VoterManagement extends CI_Controller {
 					$data = array(
 					    'uuid' => $_POST['uuid'],
 						'nik' => $_POST['nik'],
-						'passport_no' => $_POST['passport_no'],
+						'passport_no' => preg_replace("/[^a-zA-Z0-9]/", "", $_POST['passport_no']),
 						'fullname' => $_POST['fullname'],
 						'birthdate' => $_POST['birthday']."#".$_POST['birthmonth']."#".$_POST['birthyear'],
 						'birthplace' => $_POST['birthplace'],
@@ -120,6 +191,7 @@ class VoterManagement extends CI_Controller {
 						'marital_status' => $_POST['marital_status'],
 						'city' => $_POST['city'],
 						'address' => $_POST['address'],
+						'kode_pos' => $_POST['kode_pos'],
 						'disability_type' => $_POST['disability_type'],
 						'kpps_type' => $_POST['kpps_type']
 					);
@@ -310,7 +382,12 @@ class VoterManagement extends CI_Controller {
 				'script' => $this->recaptcha->getScriptTag(),
 			);
 			if($this->uri->segment(3)){
-				$uuid = $this->uri->segment(3);
+				if (isset($_SESSION['user_logged'])){
+					$uuid=$this->uri->segment(3);
+				}else{
+					$arrayUri = explode("n", $this->uri->segment(3));
+					$uuid = $arrayUri[1];
+				}
 
 				//check user in database
 				$this->load->model("Voter_m");
@@ -327,6 +404,12 @@ class VoterManagement extends CI_Controller {
 			$this->load->view('voter/registerVoter',$data);
 			$this->load->view('layout/footer');
 		}
+		
+			//penutup pemblokiran
+    // 	}else{
+	   //     	$this->load->view('welcome_message',$data); 
+	   // }
+	    
 	}
 
 	public function delete($uuid){
@@ -338,7 +421,7 @@ class VoterManagement extends CI_Controller {
 		}else{
 			$this->session->set_flashdata('error_msg', 'gagal hapus data');
 		}
-		//redirect(base_url('voterManagement/search'));
+		redirect(base_url('voterManagement/search'));
 	}
 
 	public function verifyVoter($uuid){
@@ -352,6 +435,21 @@ class VoterManagement extends CI_Controller {
 		}
 		redirect(base_url('voterManagement/search'));
 	}
+	
+	
+	public function pulangKeIndo($uuid){
+		$this->load->model("Voter_m");
+		$result=$this->Voter_m->pulangKeIndo($uuid);
+		
+		if($result){
+			$this->session->set_flashdata('success_msg', 'Data Pemilih pindah ke Dalam Negeri');
+		}else{
+			$this->session->set_flashdata('error_msg', 'gagal pemindahan data');
+		}
+		redirect(base_url('voterManagement/search'));
+	}
+	
+	
 
 	public function cekreferral(){
 			$this->load->model("Voter_m");

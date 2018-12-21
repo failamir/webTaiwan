@@ -355,12 +355,12 @@ class Voter_m extends CI_Model {
 		endif;
 	}
 
-    public  function getAllData($limit, $page, $name, $passport_no) {
+    public  function getAllData($limit, $page, $name, $passport_no, $birthdate, $birthplace ) {
         $this->db->select('*');
         $this->db->from('voters');
         $this->db->limit($limit, $page);
-        $this->db->like(array('fullname' => $name,'passport_no' => $passport_no));
-        $this->db->order_by('nik', 'ASC');
+        $this->db->like(array('fullname' => $name,'passport_no' => $passport_no, 'birthdate' => $birthdate, 'birthplace' => $birthplace));
+        $this->db->order_by('fullname', 'ASC');
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -372,18 +372,26 @@ class Voter_m extends CI_Model {
         return FALSE;
     }
 
-    public function record_count($name, $passport_no) {
+    public function record_count($name, $passport_no, $birthdate, $birthplace ) {
         $this->db->select('*');
         $this->db->from('voters');
-        $this->db->like(array('fullname' => $name,'passport_no' => $passport_no));
+       $this->db->like(array('fullname' => $name,'passport_no' => $passport_no, 'birthdate' => $birthdate, 'birthplace' => $birthplace));
         $query = $this->db->get();
 
         return $query->num_rows();
     }
 
     public function delete($uuid){
+        // $this->db->where('uuid',$uuid);
+        // $this->db->delete('voters');
+        //     if($this->db->affected_rows() >0){
+        //     return true;
+        // }else{
+        //     return false;
+        // }
         $this->db->where('uuid',$uuid);
-        $this->db->delete('voters');
+        $data = array('is_verified' => 0,'status_pemilih' => 'DATAGANDA');    
+        $this->db->update('voters', $data); 
             if($this->db->affected_rows() >0){
             return true;
         }else{
@@ -393,8 +401,20 @@ class Voter_m extends CI_Model {
     }
 
     public function verifyVoter($uuid){
-        $this->db->where('passport_no',$uuid);
-        $data = array('is_verified' => 2);    
+        $this->db->where('uuid',$uuid);
+        $data = array('is_verified' => 2,'status_pemilih' => 'DPTHPLN');    
+        $this->db->update('voters', $data); 
+            if($this->db->affected_rows() >0){
+            return true;
+        }else{
+            return false;
+        }
+    
+    }
+    
+      public function pulangKeIndo($uuid){
+        $this->db->where('uuid',$uuid);
+        $data = array('is_verified' => 0,'status_pemilih' => 'PINDAHDN');    
         $this->db->update('voters', $data); 
             if($this->db->affected_rows() >0){
             return true;
@@ -413,5 +433,17 @@ class Voter_m extends CI_Model {
             return $query->result();
         }
         return FALSE;
+    }
+    
+     //ambil data mahasiswa dari database
+    public function getPemilihVerifikasi($limit, $start){
+        $this->db->select('*');
+        $this->db->from('voters');
+        $this->db->limit($limit, $start);
+        //$this->db->where('photo', 1);
+        $this->db->like('is_verified', '1'); 
+        $query = $this->db->get();
+     
+        return $query;
     }
 }

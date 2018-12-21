@@ -1,7 +1,24 @@
 <div class="container">
+             <?php 
+            
+            function mask ( $str, $start = 0, $length = null ) {
+            $mask = preg_replace ( "/\S/", "*", $str );
+            if( is_null ( $length )) {
+                $mask = substr ( $mask, $start );
+                $str = substr_replace ( $str, $mask, $start );
+                //$str=preg_replace('/\d/', '*', $str );
+            }else{
+                $mask = substr ( $mask, $start, $length );
+                $str = substr_replace ( $str, $mask, $start, $length );
+                $str=preg_replace('/\d/', '*', $str );
+            }
+            return $str;
+            }
+ 
+            
+            ?>
     <div class="page-header">
-        <h1>Hasil Pencarian Pemilih</h1>
-        <h3>Pendaftaran pemilih akan ditutup tanggal 15 Oktober 2018</h3>
+        <h3>Hasil Pencarian Pemilih</h3>
     </div>
     <?php if(isset($_SESSION['success'])) { ?>
         <div class="alert alert-success alert-dismissible fade show">
@@ -15,18 +32,60 @@
             <?php echo $_SESSION['error']; ?>
         </div>
     <?php } ?>
-    <p><?php if($referral)echo "(referral kode: ".$referral.")" ?> Masukkan nama atau nomer paspor/SPLP pemilih :</p>
+   
     <form action="" class="searchForm" method="post" novalidate>
          <div class="form-group">
-            <input class="form-control" value="<?=$searchVal?>" name="searchVal" id="searchVal" type="searchVal" placeholder="Contoh: Jefferson atau B1234567, minimal 4 huruf" minlength="4" required>
+            <input class="form-control" value="<?=$searchVal?>" name="searchVal" id="searchVal" type="searchVal" placeholder="Contoh: Jefferson, minimal 4 huruf" minlength="4" required>
             <div class="invalid-feedback">
                 Mohon masukkan pencarian dengan benar.
             </div>
         </div>
+        
+
+
+        <?php 
+            if($totalRows>=15)
+                {
+        ?>
+ <p><?php if($referral)echo "(referral kode: ".$referral.")" ?> Apabila hasil pencarian terlalu banyak, silahkan masukkan juga kota kelahiran dan atau tahun kelahiran anda.</p>
+        <div class="form-group">
+             <input class="form-control" name="kotaLahirVal" id="kotaLahirVal" type="text" placeholder="Masukkan kota lahir" minlength="4">
+            <div class="invalid-feedback">
+                Mohon masukkan kota kelahiran anda.
+            </div>
+        </div>
+        <div class="form-group">
+             <input class="form-control" name="tahunLahirVal" id="tahunLahirVal" type="number" placeholder="Masukkan tahun lahir" minlength="4">
+            <div class="invalid-feedback">
+                Mohon masukkan tahun kelahiran anda
+            </div>
+        </div>
+        <?php 
+          } else{
+          //penutup if jumlah lebih dari 15
+        ?>
+
+        <div class="form-group">
+             <input class="form-control" name="kotaLahirVal" id="kotaLahirVal" type="hidden" placeholder="Masukkan kota lahir (boleh dikosongkan)" minlength="4">
+            <div class="invalid-feedback">
+                Mohon masukkan kota kelahiran anda.
+            </div>
+        </div>
+        <div class="form-group">
+             <input class="form-control" name="tahunLahirVal" id="tahunLahirVal" type="hidden" placeholder="Masukkan tahun lahir (boleh dikosongkan)" minlength="4">
+            <div class="invalid-feedback">
+                Mohon masukkan tahun kelahiran anda
+            </div>
+        </div>
+
+        <?php 
+          }//penutup else if jumlah lebih dari 15
+        ?>
 
         <div>
             <button class="btn btn-primary" name="search">Cari</button>
-            <a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>"><button class="btn btn-success my-2 my-sm-0" type="button">Daftar Baru</button></a>
+    <!--penutupan dpt-->
+            <!--<a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>"><button class="btn btn-success my-2 my-sm-0" type="button">Daftar Baru</button></a>-->
         </div>
     </form>
     <br>
@@ -81,7 +140,21 @@
                             }
                             
                         }
-                    } else { echo $voter->nik; }
+                    } 
+                    //penutupan dpt
+                    // else { 
+                    //     //echo $voter->nik; 
+                    //       if($voter->birthdate=='' || $voter->birthplace=='' || $voter->address==''){
+                    //         echo'<p><font color="red">Kurang Lengkap</font></p>';
+                    //     }else{
+                    //         if($voter->date_created==='' && $voter->date_modified===''){
+                    //             echo'<p style="background:yellow"><font color="green">Mohon dicek</font></p>';
+                    //         }else{
+                    //             echo'<p><font color="green">Data Lengkap</font></p>';    
+                    //         }
+                            
+                    //     }
+                    // }
             ?>
             </td>
              <td><?php if (isset($_SESSION['user_logged'])) {?>
@@ -100,10 +173,10 @@
                     data-marital_status="<?= $voter->marital_status; ?>"
                     data-city="<?= $voter->city; ?>"
                     data-address="<?= $voter->address; ?>"
-                    data-address_chinese="<?= $voter->address_chinese; ?>"
+                    data-status_pemilih="<?= $voter->status_pemilih; ?>"
                     data-disability_type="<?= $voter->disability_type; ?>"
                     data-kpps_type="<?= $voter->kpps_type; ?>"
-                    data-is_verified="<?= $voter->is_verified; ?>"
+                    data-photo="<?= $voter->photo; ?>"
                     data-date_created="<?= $voter->date_created; ?>"
                     >Verifikasi</a>
                    
@@ -116,6 +189,7 @@
                     }  
 
                     ?>
+                    <!--penutupan DPT-->
                     <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmModal" data-birth_year="<?= $year; ?>" data-uuid="<?=$voter->uuid; ?>" data-passport_no="<?= $voter->passport_no; ?>">Ubah</a>
                 <?php } ?>
             </td>
@@ -127,7 +201,6 @@
                 ?><?="*****".$str_end?>
                 <?php } else { echo $voter->passport_no; }?>
             </td>
-            
             <td><?php
             
             if($voter->birthplace == ''){
@@ -136,20 +209,37 @@
                 echo $voter->birthplace.' ';
             }
             
+            
+
             // if(preg_match("/\d{4}/", $voter->birthdate, $year_matches)){
             //      $year_found = $year_matches[0];
             //      echo str_replace($year_found,"XXXX", $voter->birthdate);
             // }else{
             //     echo '<p><font color="red">(tolong di update)</font></p>';
             // }
-            
+            if (isset($_SESSION['user_logged'])) {
+                echo " ".$voter->birthdate;
+            }
             
             //=(($voter->birthplace == '') ? '<p><font color="red">(tolong di update)</font></p>' : $voter->birthplace).", ".(($voter->birthdate == '') ? '<p><font color="red">(tolong di update)</font></p>' : $voter->birthdate) 
             
             ?></td>
             <td><?=($voter->gender == "Female")||($voter->gender == "P") ? "Perempuan" : "Laki-laki"?></td>
-            <td><?= ((strlen($voter->address) <= 12) ? '<p><font color="red">(tolong di update)</font></p>' : $voter->address) ?></td>
-            <td><?=$voter->kpps_type ?></td>
+           <?php  if (isset($_SESSION['user_logged'])) {
+                   $alamatnya=$voter->address;
+                    }else{
+                    
+                     $alamatnya=mask($voter->address,null,strlen($voter->address)/3);
+                    }
+            ?>
+            <td><?= ((strlen($voter->address) <= 12) ? '<p><font color="red">(tolong di update)</font></p>' : $alamatnya
+            ) ?></td>
+            
+            <?php if($voter->status_pemilih=='DPTHPLN'){ ?>
+            <td><?php echo $voter->kpps_type." ".$voter->editor_phone ?></td>
+            <?php }else{ ?>
+            <td><?php echo $voter->status_pemilih ?></td>
+            <?php } ?>
             <!--<td><?= (($voter->is_verified == 0) ? 'Belum Terverifikasi' : 'Terverifikasi') ?></td>-->
            
         </tr>
@@ -214,6 +304,10 @@
                         </tr>
                       </thead>
                       <tbody>
+                         <tr>
+                          <td>Status</td>
+                          <td id="m_status_pemilih"> </td>
+                        </tr>
                         <tr>
                           <td>NIK</td>
                           <td id="m_nik"></td>
@@ -255,10 +349,7 @@
                           <td>Alamat(en)</td>
                           <td id="m_address"></td>
                         </tr>
-                        <tr>
-                          <td>Alamat(zhongwen)</td>
-                          <td id="m_address_chinese"> </td>
-                        </tr>
+                        
                         <tr>
                           <td>Gender</td>
                           <td id="m_gender"></td>
@@ -271,9 +362,9 @@
                           <td>Disabilitas</td>
                           <td id="m_disability_type"></td>
                         </tr>
+              
                         <tr>
-                          <td>Input data</td>
-                          <td id="m_date_created"></td>
+                          <td id="m_photo"></td>
                         </tr>
                       </tbody>
                      </table>
@@ -283,8 +374,8 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-                <button class="btn btn-danger" id="HapusDataModal">Hapus</button>
+                <button type="button" class="btn btn-danger" id="PindahKeIndoModal">Coblos di Indo</button>
+                <button class="btn btn-danger" id="HapusDataModal">Data Ganda</button>
                  <button class="btn btn-success" id="VerifikasiDataModal">Verifikasi</button>
                 <button class="btn btn-primary" id="UbahDataModal">Ubah data</button>
 
@@ -301,7 +392,8 @@
             <!-- Modal body -->
             <div class="modal-body">
                 <div class="alert alert-danger alert-dismissible" role="alert" id="errorModal">
-                    Tahun kelahiran yang Anda masukkan tidak sesuai dengan data ini.
+                    Tahun kelahiran yang Anda masukkan tidak sesuai dengan data ini.<br>
+                    Jika benar ini adalah data anda, silahkan email kami dengan melampirkan foto kartu identitas ke <a href="mailto:admin@pplntaipei2019.org?=Kesalahan%20Tanggal%20Lahir%20" target="_top">admin@pplntaipei2019.org</a>
                 </div>
                 <div class="col-sm-10"><label for="passport_no">Silahkan masukkan Tahun kelahiran Anda: </label></div>
                 <div class="col-sm-10">
@@ -356,8 +448,8 @@
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/jquery.md5.js"></script>
+<script src="<?php echo base_url(); ?>jscr/bootstrap.min.js"></script>
+<script src="<?php echo base_url(); ?>jscr/jquery.md5.js"></script>
 <script>
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function() {
@@ -422,7 +514,7 @@
                 }
                 document.getElementById("m_city").innerHTML = $(e.relatedTarget).data('city');
                 document.getElementById("m_address").innerHTML = $(e.relatedTarget).data('address');
-                document.getElementById("m_address_chinese").innerHTML = $(e.relatedTarget).data('address_chinese');
+                document.getElementById("m_status_pemilih").innerHTML = $(e.relatedTarget).data('status_pemilih');
                 
                 document.getElementById("m_disability_type").innerHTML = $(e.relatedTarget).data('disability_type');
                 if($(e.relatedTarget).data('disability_type')=='NONE'){
@@ -447,9 +539,11 @@
                 }else if ($(e.relatedTarget).data('kpps_type')=='KSK'){
                     document.getElementById("m_kpps_type").innerHTML = 'Kotak Suara Keliling';
                 }
+                
+                
 
 
-                document.getElementById("m_date_created").innerHTML = $(e.relatedTarget).data('date_created');
+              document.getElementById("m_photo").innerHTML =  '<img style=\'width:100%;max-width:500px\' src='+'\'http://daftar.pplntaipei2019.org/assets/idimages/'+$(e.relatedTarget).data('photo')+'\'/>';
             }
             
   // var birth_year= $(e.relatedTarget).data('birthday').concat($(e.relatedTarget).data('birthmonth'),$(e.relatedTarget).data('birthyear'));
@@ -459,7 +553,7 @@
                 hasilInputan=hasilInputan.replace(/0/gi, "");
                 //alert (hasilInputan+' ternyata aslinya '+birth_year);
                 if (birth_year == hasilInputan || birth_year=='') {
-                window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + uuid+"/<?php if($referral)echo $referral ?>"; 
+                    window.location.href = "<?php echo base_url(); ?>voterManagement/register/" + birth_year+"n"+uuid+"/<?php if($referral)echo $referral ?>"; 
                 } else {
                     $('#errorModal').css('display','block');
                 }
@@ -470,7 +564,7 @@
             });
 
              $("#HapusDataModal").click(function () {
-                var result = confirm("Yakin ingin menghapus?"+ uuid);
+                var result = confirm("Yakin ingin memindah ke data ganda?"+ uuid);
                 if (result) {
                     //Logic to delete the item
                     window.location.href = "<?php echo base_url(); ?>voterManagement/delete/" + uuid; 
@@ -478,13 +572,24 @@
             });
 
             $("#VerifikasiDataModal").click(function () {
-                if($(e.relatedTarget).data('is_verified')=='2'){
-                    alert("Pemilih Sudah Verified");
-                }else{
+                
+                // if($(e.relatedTarget).data('is_verified')=='2'){
+                   
+                // }else{
+                    
                     window.location.href = "<?php echo base_url(); ?>voterManagement/verifyVoter/" + uuid; 
-                }
+                // }
                 
             });
+            
+            $("#PindahKeIndoModal").click(function () {
+              var result = confirm("Yakin ingin memindah ke dalam negeri?"+ uuid);
+                if (result) {
+                    window.location.href = "<?php echo base_url(); ?>voterManagement/pulangKeIndo/" + uuid; 
+                }
+                //alert("Masih On Develop");
+            });
+            
              
 
         });
@@ -494,7 +599,7 @@
 
 <?php } else { ?>
 
-    <p>Nama/Nomor paspor anda belum terdaftar, silahkan daftar  <a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>">disini</a>.</p>
+    <!--<p>Nama/Nomor paspor anda belum terdaftar, silahkan daftar  <a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>">disini</a>.</p>-->
 </div>
     </body>
 <?php } ?>

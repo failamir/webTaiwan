@@ -1,6 +1,7 @@
 <div class="jumbotron text-xs-center">
    <h1 class="display-3">Terima Kasih! <?php if(!$editor_phone=='')echo "referral anda ".$editor_phone; ?></h1>
   <p class="lead"><strong>Data <?php echo $fullname; ?> sudah TERDAFTAR,</strong> untuk keterangan lebih lanjut silahkan kunjungi website kita</p>
+  <!--<p>Ingin bantu mendaftarkan teman anda? silahkan daftarkan <a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>">disini</a>.</p>-->
   <hr>
   <h2>Perlu Diketahui</h2>
   <br>

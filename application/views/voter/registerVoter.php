@@ -1,6 +1,30 @@
 <div class="container">
 	<div class="page-header">
-		<h1>Registrasi Pemilih <?php if(isset($referral))echo "(Referral: ".$referral.")" ?></h1>
+		<h1><?php 
+			if (isset($user)) {
+				//echo print_r($user);
+				$user = json_decode(json_encode($user), True);
+				$fromDBuuidandbirthday=str_replace(array('#','-','0'), '', $user['birthdate'])."n".$user['uuid'];
+				//echo $fromDBuuidandbirthday." hasilnya adalah ".$this->uri->segment(3);
+
+				if (isset($_SESSION['user_logged'])==false){
+					if($fromDBuuidandbirthday==$this->uri->segment(3)){
+						echo "Ubah data pemilih</h1>";
+					}else{
+						echo "Akses ditolak</h1>";
+						echo "Maaf anda salah memberikan informasi terhadap kami, coba ulangi pencarian dari awal, atau kalau masih belum bisa, bisa hubungi kami lewat <a href='mailto:admin@pplntaipei2019.org'>admin@pplntaipei2019.org</a>";
+						redirect(base_url()."voterManagement/search","refresh");
+					}
+				}
+
+
+			}else{
+				echo "Registrasi Pemilih</h1><br>";
+				
+			}
+			if(isset($referral))echo "(Referral: ".$referral.")";
+		?> 
+		
 	</div>
 	<p>Masukkan data untuk melakukan registrasi pemilih!</p>
 	<?php if(isset($_SESSION['success'])) { ?>
@@ -14,11 +38,7 @@
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			<?php echo $_SESSION['error']; ?>
 		</div>
-	<?php };
-	if (isset($user)) {
-		//echo print_r($user);
-		$user = json_decode(json_encode($user), True);
-	}?>
+	<?php }; ?>
 	<form action="<?php echo base_url().'index.php/voterManagement/register'?>" class="registerForm" method="post" enctype="multipart/form-data">
 		
 		<div class="form-group row">
@@ -196,6 +216,16 @@
 				</div>
 			</div>
 		</div>
+		
+		
+		<div class="form-group row">
+			<div class="col-sm-5"><label for="phone_number">Kode Pos (Wajib diisi untuk POS):</label></div>
+			<div class="col-sm-7"><input class="form-control" name="kode_pos" id="kode_pos" type="number">
+				<div class="invalid-feedback">
+					Mohon diisi dengan benar.
+				</div>
+			</div>
+		</div>
 
 
 		<div class="form-group row">
@@ -233,7 +263,7 @@
 					echo 'required bawah';
 				}
 			?> 
-			<img src="" name="photo" id="photo2" width="120" height="160" align="right"></div>
+			<img src="" name="photo" id="photo2" style="width:100%;max-width:1000px" align="right"></div>px
 		</div>
 
 		<!--<div class="form-group" id="munculNotif" align="center">-->
@@ -308,6 +338,7 @@
 		$("#marital_status").val("<?= $user['marital_status'] ?>");
 		$("#city").val("<?= $user['city'] ?>");
 		$("#address").val("<?= $user['address'] ?>");
+		$("#kode_pos").val("<?= $user['kode_pos'] ?>");
 		$("#disability_type").val("<?= $user['disability_type'] ?>");
 		$("#kpps_type").val("<?= $user['kpps_type'] ?>");
 		$("#photo2").attr("src","<?= base_url()?>assets/idimages/<?= $user['photo'] ?>");

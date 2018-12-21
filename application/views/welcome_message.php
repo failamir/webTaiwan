@@ -73,7 +73,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div id="body">
 		<p>Berdasarkan arahan dari KPU pusat, PPLN Taipei mengeluarkan beberapa pengumuman.</p>
 
-		<code>1. Proses pendaftaran DPT secara online ditutup per-tanggal 11 September 2018.</code>
+		<code>1. Proses pendaftaran DPT secara online ditutup per-tanggal 8 Desember 2018.</code>
 		<code>2. Untuk berikutnya silahkan menunggu pengumuman resmi dari kami.</code>
 		
 
