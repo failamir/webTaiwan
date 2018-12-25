@@ -65,8 +65,6 @@ class VoterManagement extends CI_Controller {
  
         $data['pagination'] = $this->pagination->create_links();
  
-  
-        
         	$this->load->view('layout/header');
 			$this->load->view('voter/verifikasi', $data);
 			$this->load->view('layout/footer');

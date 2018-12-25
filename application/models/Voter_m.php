@@ -435,7 +435,7 @@ class Voter_m extends CI_Model {
         return FALSE;
     }
     
-     //ambil data mahasiswa dari database
+     //ambil data pemilih dari database
     public function getPemilihVerifikasi($limit, $start){
         $this->db->select('*');
         $this->db->from('voters');

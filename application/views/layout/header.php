@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap.css">
 
+
     <title>Cari Pemilih</title>
 </head>
 <body>
@@ -28,12 +29,12 @@
             </li>
             <?php } ?>
 
-            <li class="nav-item active">
-                <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/search">Cari Pemilih <span class="sr-only">(current)</span></a>
+            <li class="nav-item ">
+                <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/search">Cari Pemilih </a>
             </li>
           <?php if (isset($_SESSION['user_logged'])) { ?>
             <li class="nav-item">
-                <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/verifikasiPemilih">Verifikasi Pemilih</a>
+                <a class="nav-link" href="<?php echo base_url(); ?>voterAdmin">Verifikasi Pemilih</a>
             </li>
               <li class="nav-item">
                 <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/register">Daftarkan Pemilih</a>
