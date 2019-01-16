@@ -24,7 +24,7 @@
             <li class="nav-item active">
                 <a class="nav-link" href="<?php echo base_url(); ?>user/profile">Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" >
                 <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/search">Cari Pemilih</a>
             </li>
                 <?php if (isset($_SESSION['user_logged'])) { ?>

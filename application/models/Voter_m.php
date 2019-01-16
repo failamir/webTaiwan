@@ -446,4 +446,12 @@ class Voter_m extends CI_Model {
      
         return $query;
     }
+	
+	//autocomplete things
+	function search_name($title){
+        $this->db->like('fullname', $title , 'both');
+        $this->db->order_by('fullname', 'ASC');
+        $this->db->limit(10);
+        return $this->db->get('voters')->result();
+    }
 }

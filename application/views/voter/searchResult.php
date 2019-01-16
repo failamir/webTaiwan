@@ -599,7 +599,80 @@
 
 <?php } else { ?>
 
+ <!-- MODAL ADD -->
+            <form>
+            <div class="modal fade" id="Modal_Add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tinggalkan kontak anda agar kami bisa memberitahu pengumuman penting terutama pendaftaran PEMILU</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      
+                              <input type="text" name="subscriber_code" id="subscriber_code" class="form-control" placeholder="Subscriber Code" hidden>
+                        
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label">Nama Lengkap</label>
+                            <div class="col-md-10">
+                              <input type="text" name="subscriber_name" id="subscriber_name" class="form-control" placeholder="Subscriber Name">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label">Kontak</label>
+                            <div class="col-md-10">
+                              <input type="text" name="subscriber_contact" id="subscriber_contact" class="form-control" placeholder="Nomor Handphone atau Email ">
+                            </div>
+                        </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" type="submit" id="btn_save" class="btn btn-primary">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </form>
+        <!--END MODAL ADD-->
+
+    <p>Nama/Nomor paspor anda belum terdaftar dalam DPTLN. Saat ini pendaftaran DPT ditutup, namun pendaftaran sebagai peserta pemilu sebagai DPTbLN masih dibuka dengan cara sesuai dengan gambar di bawah ini. Silahkan di ZOOM IN untuk melihat lebih detail.</p>
+	<img class="img-fluid"src="<?php echo base_url(); ?>assets/idimages/setelahdpt.jpg" alt="Prosedur pendaftaran setelah DPT">
+	<hr>
+	<p>Kami akan membuka pendaftaran DPTLN Online apabila ada arahan lebih lanjut dari KPU RI. Supaya tidak ketinggalan berita dari kami, silahkan BERLANGGANAN ke kami dengan cara klik <a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#Modal_Add"><span class="fa fa-plus"></span> Disini </a></div>
+
+	<script type="text/javascript" src="<?php echo base_url().'assets/js/jquery-3.2.1.js'?>"></script>
+	<script type="text/javascript" src="<?php echo base_url().'assets/js/bootstrap.js'?>"></script>
+	<script type="text/javascript" src="<?php echo base_url().'assets/js/jquery.dataTables.js'?>"></script>
+	<script type="text/javascript" src="<?php echo base_url().'assets/js/dataTables.bootstrap4.js'?>"></script>
+
+	<script type="text/javascript">
+	 //Save subscriber
+        $('#btn_save').on('click',function(){
+            var subscriber_code = $('#subscriber_code').val();
+            var subscriber_name = $('#subscriber_name').val();
+            var subscriber_contact = $('#subscriber_contact').val();
+			
+            $.ajax({
+                type : "POST",
+                url  : "<?php echo site_url('subscribe/save')?>",
+                dataType : "JSON",
+                data : {subscriber_code:subscriber_code , subscriber_name:subscriber_name, subscriber_contact:subscriber_contact},
+                success: function(data){
+                    $('[name="subscriber_code"]').val("");
+                    $('[name="subscriber_name"]').val("");
+                    $('[name="subscriber_contact"]').val("");
+                    $('#Modal_Add').modal('hide');
+					alert("Terima Kasih sudah berlangganan informasi ke kami");
+                }
+            });
+            return false;
+        });
+	</script>
+
     <!--<p>Nama/Nomor paspor anda belum terdaftar, silahkan daftar  <a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>">disini</a>.</p>-->
+	
 </div>
     </body>
 <?php } ?>
