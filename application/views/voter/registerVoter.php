@@ -39,11 +39,31 @@
 			<?php echo $_SESSION['error']; ?>
 		</div>
 	<?php }; ?>
-	<form action="<?php echo base_url().'index.php/voterManagement/register'?>" class="registerForm" method="post" enctype="multipart/form-data">
-		
-		<div class="form-group row">
-			<div class="col-sm-5"><label for="editor_phone">Referral (Abaikan kalau tidak tahu):</label></div>
-			<div class="col-sm-7"><input value="<?php if(isset($referral))echo $referral ?>" class="form-control" name="editor_phone" id="editor_phone" disabled="disabled" type="text"></div>
+		<form action="<?php echo base_url().'index.php/voterManagement/register'?>" class="registerForm" method="post" enctype="multipart/form-data">
+<div class="form-group row">
+<!-- 			<div class="col-sm-5"><label for="editor_phone">Referral (Abaikan kalau tidak tahu):</label></div>  -->
+			
+
+			 <?php if (isset($_SESSION['user_logged'])) { ?>
+				<div class="col-sm-5"><label for="editor_phone">Nomor KPPSLN: (Kosongi kalau tidak tahu) </label></div>
+				<input value="<?php echo $_SESSION['username']; ?>" class="form-control" name="validator" id="validator" type="hidden">
+
+				<div class="col-sm-7"><input value="<?php if(isset($referral))echo $referral ?>" class="form-control" name="editor_phone" id="editor_phone" type="text"></div>
+				</div>
+				<div class="form-group row">
+				<div class="col-sm-5"><label for="status_pemilih">Jenis Pemilih </label></div>
+				<div class="col-sm-7"><select mutiple="multiple" id="status_pemilih" name="status_pemilih" class="form-control" required>
+					<option selected="" value=""> -- Pilih salah satu -- </option>
+					<option value="DPKLN">Daftar Pemilih Khusus</option>
+					<option value="DPTBLN">Daftar Pemilih Tambahan/Pindah</option>
+					<option value="DPTHPLN">Daftar Pemilih Tetap</option>
+									</select>
+				</div>
+
+			 <?php }else{ ?>
+			 	<div class="col-sm-7"><input value="<?php if(isset($referral))echo $referral ?>" class="form-control" name="editor_phone" id="editor_phone" type="hidden"></div>
+			 	<div class="col-sm-7"><input value="DPKLN" class="form-control" name="status_pemilih" id="status_pemilih" type="hidden"></div>
+			 <?php } ?>
 		</div>
 
 		<div class="form-group row">
@@ -114,21 +134,54 @@
 					<div class="col-sm">
 						<select class="form-control" id="birthday" name="birthday" required>
 						<option selected="" value=""> Tanggal </option>
-						<?php 
-							for ($tanggal_val = 1; $tanggal_val <= 31; $tanggal_val++) {
-  								echo '<option value="'.$tanggal_val.'">'.$tanggal_val.'</option>';
-							}
-						?>
+						<option value="01">01</option>
+						<option value="02">02</option>
+						<option value="03">03</option>
+						<option value="04">04</option>
+						<option value="05">05</option>
+						<option value="06">06</option>
+						<option value="07">07</option>
+						<option value="08">08</option>
+						<option value="09">09</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+						<option value="13">13</option>
+						<option value="14">14</option>
+						<option value="15">15</option>
+						<option value="16">16</option>
+						<option value="17">17</option>
+						<option value="18">18</option>
+						<option value="19">19</option>
+						<option value="20">20</option>
+						<option value="21">21</option>
+						<option value="22">22</option>
+						<option value="23">23</option>
+						<option value="24">24</option>
+						<option value="25">25</option>
+						<option value="26">26</option>
+						<option value="27">27</option>
+						<option value="28">28</option>
+						<option value="29">29</option>
+						<option value="30">30</option>
+						<option value="31">31</option>
 						</select>
 					</div>
 					<div class="col-sm">
 						<select class="form-control" id="birthmonth" name="birthmonth" required>
 						<option selected="" value=""> Bulan </option>
-						<?php 
-							for ($bulan_val = 1; $bulan_val <= 12; $bulan_val++) {
-  								echo '<option value="'.$bulan_val.'">'.$bulan_val.'</option>';
-							}
-						?>
+						<option value="01">01</option>
+						<option value="02">02</option>
+						<option value="03">03</option>
+						<option value="04">04</option>
+						<option value="05">05</option>
+						<option value="06">06</option>
+						<option value="07">07</option>
+						<option value="08">08</option>
+						<option value="09">09</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
 						</select>
 					</div>
 					<div class="col-sm">
@@ -150,8 +203,8 @@
 			<div class="col-sm-5"><label for="gender">Jenis Kelamin:</label></div>
 			<div class="col-sm-7"><select class="form-control" id="gender" name="gender" required>
 					<option selected="" value=""> -- Pilih salah satu -- </option>
-					<option value="Male">Laki-laki</option>
-					<option value="Female">Perempuan</option>
+					<option value="L">Laki-laki</option>
+					<option value="P">Perempuan</option>
 				</select>
 			</div>
 		</div>
@@ -198,15 +251,26 @@
 		</div>
 
 		<div class="form-group row">
-			<div class="col-sm-5"><label for="kpps_type">Jenis KPPS (cara pemilihan):</label></div>
+			<div class="col-sm-5"><label for="kpps_type">Cara Pemilihan (DPKLN dan DPTBLN hanya dengan datang ke TPS):</label></div>
 			<div class="col-sm-7"><select mutiple="multiple" id="kpps_type" name="kpps_type" class="form-control" required>
+					<?php if (isset($user)) { 
+							if($user['status_pemilih']=='DPKLN' || $user['status_pemilih']=='DPTBLN'){
+						?>
+					<option selected="" value="TPS"> -- Pilih salah satu -- </option>
+					<option value="TPS">Datang ke TPSLN</option>
+					<?php }else{ ?>
 					<option selected="" value=""> -- Pilih salah satu -- </option>
 					<option value="TPS">Datang ke TPSLN</option>
 					<option value="POS">Kirim via POS</option>
 					<option value="KSK">Kotak Suara Keliling (Khusus ABK)</option>
+					<?php } }else{ ?>
+					<option selected="" value=""> -- Pilih salah satu -- </option>
+					<option value="TPS">Datang ke TPSLN</option>
+					<?php } ?>
 				</select>
 			</div>
 		</div>
+
 
 		<div class="form-group row">
 			<div class="col-sm-5"><label for="address">Alamat domisili di Taiwan:</label></div>
@@ -339,7 +403,8 @@
 		$("#city").val("<?= $user['city'] ?>");
 		$("#address").val("<?= $user['address'] ?>");
 		$("#kode_pos").val("<?= $user['kode_pos'] ?>");
-		$("#disability_type").val("<?= $user['disability_type'] ?>");
+		$("#status_pemilih").val("<?= $user['status_pemilih'] ?>");
+		$("#disability_type").val("Tidak Ada");
 		$("#kpps_type").val("<?= $user['kpps_type'] ?>");
 		$("#photo2").attr("src","<?= base_url()?>assets/idimages/<?= $user['photo'] ?>");
 		$("#btnSubmit").attr("name","update")

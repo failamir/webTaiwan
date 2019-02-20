@@ -157,6 +157,9 @@ class VoterManagement extends CI_Controller {
 						'disability_type' => $_POST['disability_type'],
 						'kpps_type' => $_POST['kpps_type']
 					);
+					if (isset($_SESSION['user_logged'])) {
+						$data['validator'] =$_POST['validator'];
+					}
 					
 					if(empty($_POST['editor_phone'])){
 						$data['editor_phone'] ="";
@@ -165,6 +168,8 @@ class VoterManagement extends CI_Controller {
 					}
 
 						if (isset($_POST['register'])) {
+						    //status pemilih setelah tanggal dpt akan masuk dpk
+							$data['status_pemilih'] =$_POST['status_pemilih'];
 							if (!is_null($userpassport)) {//kalau passportnya sudah du database
 								//temporary message
 									//$this->session->set_flashdata("error", "Registrasi gagal. Pemilih telah terdaftar!");
@@ -236,7 +241,7 @@ class VoterManagement extends CI_Controller {
 
 								//redirect to profile page
 								//redirect(base_url()."voterManagement/register","refresh");
-							} else {//kalau passportnya sudah du database
+							} else {//murni untuk register
 
 								if(!empty($_FILES['photo']['name']))
 								{
@@ -312,6 +317,7 @@ class VoterManagement extends CI_Controller {
 								}
 							}
 
+	                        $data['status_pemilih'] =$_POST['status_pemilih'];
 							$data['date_modified'] = date("Y-m-d h:i:sa");
 							$result = $this->Voter_m->update($data);
 

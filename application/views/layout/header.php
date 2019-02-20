@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap.css">
-    <link rel="stylesheet" href="<?php echo base_url().'assets/css/jquery-ui.css'?>">
+
 
     <title>Cari Pemilih</title>
 </head>
@@ -39,7 +39,7 @@
               <li class="nav-item">
                 <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/register">Daftarkan Pemilih</a>
             </li>
-			<li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link" href="<?php echo base_url(); ?>subscribe">Subscriber</a>
             </li>
              <?php } ?>

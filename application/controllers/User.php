@@ -18,8 +18,13 @@ class User extends CI_Controller {
     }
 
     public function profile() {
+		
         if (isset($_SESSION['user_logged'])) {
-            $this->load->view('admin/profile');
+			$this->load->model("Stats_m");
+			$result['data']=$this->Stats_m->data_part_timer();
+			$result['a3']=$this->Stats_m->data_a3();
+			$result['perkotadanmetode']=$this->Stats_m->data_permetodedankota();
+            $this->load->view('admin/profile',$result);
         } else {
             $this->load->view('admin/login');
         }

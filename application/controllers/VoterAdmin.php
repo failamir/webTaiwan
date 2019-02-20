@@ -37,5 +37,10 @@ class VoterAdmin extends CI_Controller{
 		$data=$this->admin_voter_m->delete_voter();
 		echo json_encode($data);
 	}
+	
+	function menyerah(){
+		$data=$this->admin_voter_m->menyerah_voter();
+		echo json_encode($data);
+	}
 
 }

@@ -82,10 +82,75 @@
           }//penutup else if jumlah lebih dari 15
         ?>
 
+        
         <div>
-            <button class="btn btn-primary" name="search">Cari</button>
-    <!--penutupan dpt-->
-            <!--<a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>"><button class="btn btn-success my-2 my-sm-0" type="button">Daftar Baru</button></a>-->
+            
+    <!--penutupan dpt pembukaan dpk-->
+     <!-- MODAL Modal_DPKLN -->
+            <form>
+            <div class="modal fade" id="Modal_DPKLN" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Mendaftar DPKLN (Daftar Pemilih Khusus LN)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <p>Jika sesudah selesai pendaftaran DPTLN masih belum terdaftar, maka pendaftaran pemilu dengan jalan melalui DPKLN</p>
+                    <ol>
+                    <li>Datang langsung ke TPSLN terdekat 1 JAM sebelum waktu pencoblosan selesai.</li>
+                    <li>Hanya bisa memilih dengan datang ke TPS Terdekat,</li>
+                    <li>Ada kemungkinan tidak mendapat surat suara, jika di TPS tersebut surat suara sudah habis,</li>
+                    <li>Membawa bukti identitas warga Indonesia.</li>
+                    </ol>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <a href="<?php echo base_url(); ?>voterManagement/register/<?php if($referral)echo "0/".$referral ?>"><button class="btn btn-success my-2 my-sm-0" type="button">Daftar DPKLN</button></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </form>
+        <!--END MODAL Modal_DPKLN-->
+         <!-- MODAL Modal_DPTBLN -->
+            <form>
+            <div class="modal fade" id="Modal_DPTBLN" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Mendaftar DPTbLN (Daftar Pemilih Khusus LN)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <p>Jika sesudah selesai pendaftaran DPTLN, untuk WNI yang datang ke Taiwan (baik pelajar maupun pekerja) dan masih belum terdaftar di DPTLN Taiwan, maka pendaftaran pemilu dengan jalan melalui DPTbLN</p>
+                        <ol>
+                        <li>Memberikan form A5 ke PPLN Taipei (Form A5 dari TPS daerah asal).</li>
+                        <li>Deadline penyerahan A5, 10 Februari 2019.</li>
+                        <li>Hanya bisa memilih dengan datang ke TPS yang sudah tertulis.</li>
+                        <li>Akan mendapatkan hanya 1 surat suara pemilihan Capres dan Cawapres.</li>
+                        <li>Cara mendaftar dengan mengirimkan lampiran A5 dan PASPOR/KTP/ARC ke email ppln di <a href="mailto:admin@pplntaipei2019.org?=Daftar%20DPTbLN%20Taiwan%20" target="_top">admin@pplntaipei2019.org</a></li>
+                        </ol>
+                       
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>           
+           <a href="mailto:admin@pplntaipei2019.org?=Daftar%20DPTbLN%20Taiwan%20" target="_top"><button class="btn btn-success my-2 my-sm-0" type="button">Daftar DPTbLN</button></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </form>
+        <!--END MODAL Modal_DPTBLN-->
+        <button class="btn btn-primary" name="search">Cari</button>
+            <a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#Modal_DPKLN"><span class="fa fa-plus"></span> Daftar DPKLN </a>
+            <a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#Modal_DPTBLN"><span class="fa fa-plus"></span> Daftar DPTBLN </a>
+
+          
         </div>
     </form>
     <br>
@@ -236,7 +301,8 @@
             ) ?></td>
             
             <?php if($voter->status_pemilih=='DPTHPLN'){ ?>
-            <td><?php echo $voter->kpps_type." ".$voter->editor_phone ?></td>
+            <!--            <td><?php echo $voter->kpps_type." ".$voter->editor_phone ?></td> -->
+            <td><?php echo $voter->kpps_type ?></td>
             <?php }else{ ?>
             <td><?php echo $voter->status_pemilih ?></td>
             <?php } ?>
@@ -638,7 +704,7 @@
         <!--END MODAL ADD-->
 
     <p>Nama/Nomor paspor anda belum terdaftar dalam DPTLN. Saat ini pendaftaran DPT ditutup, namun pendaftaran sebagai peserta pemilu sebagai DPTbLN masih dibuka dengan cara sesuai dengan gambar di bawah ini. Silahkan di ZOOM IN untuk melihat lebih detail.</p>
-	<img class="img-fluid"src="<?php echo base_url(); ?>assets/idimages/setelahdpt.jpg" alt="Prosedur pendaftaran setelah DPT">
+	<img class="img-fluid"src="http://pplntaipei2019.org/wp-content/uploads/2019/01/setelahdpt.jpg" alt="Prosedur pendaftaran setelah DPT">
 	<hr>
 	<p>Kami akan membuka pendaftaran DPTLN Online apabila ada arahan lebih lanjut dari KPU RI. Supaya tidak ketinggalan berita dari kami, silahkan BERLANGGANAN ke kami dengan cara klik <a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#Modal_Add"><span class="fa fa-plus"></span> Disini </a></div>
 

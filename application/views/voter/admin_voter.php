@@ -5,7 +5,7 @@
             <div class="col-md-12">
                 <h1>Daftar
                     <small>Pemilih Tetap</small>
-                    <div class="float-right"><a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#Modal_Add"><span class="fa fa-plus"></span> Tambah Pemilih</a></div>
+                   <!--  <div class="float-right"><a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#Modal_Add"><span class="fa fa-plus"></span> Tambah Pemilih</a></div> -->
                 </h1>
             </div>
             
@@ -27,7 +27,7 @@
         
 </div>
 
-	<!-- MODAL ADD -->
+	<!-- MODAL ADD
             <form>
             <div class="modal fade" id="Modal_Add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-lg" role="document">
@@ -66,7 +66,7 @@
               </div>
             </div>
             </form>
-        <!--END MODAL ADD-->
+       -->
 		
 		   <!-- MODAL EDIT -->
         <form>
@@ -89,13 +89,19 @@
                            <div id="m_telefon" ></div>
 						</div>
                         </div>
-						
+							<div class="form-group row">
+                            <label class="col-md-2 col-form-label">Nama Admin</label>
+                            <div class="col-md-10">
+                              <input type="text" name="validator" id="validator" class="form-control" value="<?php echo $_SESSION['username']; ?>" readonly>
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label class="col-md-2 col-form-label">UUID pemilih</label>
                             <div class="col-md-10">
                               <input type="text" name="voter_uuid_edit" id="voter_uuid_edit" class="form-control" placeholder="Voter uuid" readonly>
                             </div>
                         </div>
+					
                         <div class="form-group row">
                             <label class="col-md-2 col-form-label">Nama Lengkap</label>
                             <div class="col-md-10">
@@ -133,12 +139,15 @@
 						<div class="form-group row">
                             <label class="col-md-2 col-form-label">Kode Pos</label>
                             <div class="col-md-10">
-                              <input type="number" name="voter_kodepos_edit" id="voter_kodepos_edit" class="form-control" placeholder="Kode Pos 5 digit">
+							
+                              <input type="number" pattern="[0-9]{5}" name="voter_kodepos_edit" id="voter_kodepos_edit" class="form-control" placeholder="Kode Pos 5 digit" required>
+                              <button  type="button" type="submit" id="btn_kodepos" class="btn btn-primary-control">Cek kode</button>
                             </div>
                         </div>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" id="btn_menyerah" class="btn btn-danger" data-dismiss="modal">Menyerah</button>
                     <button type="button" type="submit" id="btn_update" class="btn btn-primary">Update</button>
                   </div>
                 </div>
@@ -154,7 +163,7 @@
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete Product</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Pindah ke suara tidak sah</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -164,6 +173,7 @@
                   </div>
                   <div class="modal-footer">
                     <input type="hidden" name="voter_uuid_delete" id="voter_uuid_delete" class="form-control">
+					 <input type="hidden" name="validator_delete" id="validator_delete" class="form-control" value="<?php echo $_SESSION['username']; ?>" >
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                     <button type="button" type="submit" id="btn_delete" class="btn btn-primary">Yes</button>
                   </div>
@@ -201,7 +211,7 @@
 		                        '<td>'+data[i].fullname+'</td>'+
 		                        '<td>'+data[i].address+'</td>'+
 		                        '<td style="text-align:right;">'+
-                                    '<a href="javascript:void(0);" class="btn btn-info btn-sm item_edit" data-phone_number="'+data[i].phone_number+'" data-nik="'+data[i].nik+'" data-passport_no="'+data[i].passport_no+'" data-kode_pos="'+data[i].kode_pos+'"  data-photo="'+data[i].photo+'"  data-voter_uuid="'+data[i].uuid+'" data-voter_fullname="'+data[i].fullname+'" data-address="'+data[i].address+'">Edit</a>'+' '+
+                                    '<a href="javascript:void(0);" class="btn btn-info btn-sm item_edit" data-kpps_type="'+data[i].kpps_type+'" data-phone_number="'+data[i].phone_number+'" data-nik="'+data[i].nik+'" data-passport_no="'+data[i].passport_no+'" data-kode_pos="'+data[i].kode_pos+'"  data-photo="'+data[i].photo+'"  data-voter_uuid="'+data[i].uuid+'" data-voter_fullname="'+data[i].fullname+'" data-address="'+data[i].address+'">Edit</a>'+' '+
                                     '<a href="javascript:void(0);" class="btn btn-danger btn-sm item_delete" data-voter_uuid="'+data[i].uuid+'">Delete</a>'+
                                 '</td>'+
 		                        '</tr>';
@@ -242,7 +252,8 @@
 			var photox		   = $(this).data('photo');
 			var nik 		   = $(this).data('nik');
 			var passport_no	   = $(this).data('passport_no');
-			var kode_pos		   = $(this).data('kode_pos');
+			var kode_pos	    = $(this).data('kode_pos');
+			var kpps_type       = $(this).data('kpps_type');
             document.getElementById("m_photo").innerHTML =  '<img style=\'width:600px;max-height:1000px;display:block;margin-left:auto;margin-right:auto;\' src='+'\'http://daftar.pplntaipei2019.org/assets/idimages/'+photox+'\'/>';
 			document.getElementById("m_telefon").innerHTML = $(this).data('phone_number');
 			document.getElementById("address_edit_read").innerHTML = address;
@@ -255,6 +266,51 @@
 			$('[name="voter_kodepos_edit"]').val(kode_pos);
         });
 		
+		 //generate kode pos
+         $('#btn_kodepos').on('click',function(){
+			var adrs = $('#address_edit').val();
+			var regex01 = new RegExp(/^\d/);
+			if ((adrs != "") && (! regex01.test(adrs))) {
+				var zip5_url = "https://zip5.5432.tw/zip5json.py?adrs="+adrs;
+				
+				$.ajaxSetup({ cache: false });
+				$.getJSON(zip5_url,
+					function(data) {
+						alert(data.zipcode);
+						jQuery("#voter_kodepos_edit").val(data.zipcode);
+						jQuery("#new-adrs").text(data.new_adrs);
+					}
+				)
+			}
+            return false;
+        });
+        
+        		 //pindah data menyerah
+         $('#btn_menyerah').on('click',function(){
+            var voter_uuid = $('#voter_uuid_edit').val();
+			 var r = confirm("Yakin menyerah?");
+			  if (r == true) {
+					$.ajax({
+						type : "POST",
+						url  : "<?php echo site_url('voterAdmin/menyerah')?>",
+						dataType : "JSON",
+						data : {voter_uuid:voter_uuid},
+						success: function(data){
+							$('[name="voter_uuid_edit"]').val("");
+							$('[name="voter_fullname_edit"]').val("");
+							$('[name="address_edit"]').val("");
+							$('[name="voter_nik_edit"]').val("");
+							$('[name="voter_paspor_edit"]').val("");
+							$('[name="voter_kodepos_edit"]').val("");
+							$('#Modal_Edit').modal('hide');
+							show_product();
+						}
+					});
+			  }
+           
+            return false;
+        });
+		
 		  //update record to database
          $('#btn_update').on('click',function(){
             var voter_uuid = $('#voter_uuid_edit').val();
@@ -263,12 +319,21 @@
 			var nik 		   = $('#voter_nik_edit').val();
 			var passport_no	   = $('#voter_paspor_edit').val();
 			var kode_pos	   = $('#voter_kodepos_edit').val();
+			var validator = $('#validator').val();
+			
+			var ex = /^[0-9]{5}$/;
+            if(ex.test(kode_pos) == false)
+            {
+                // alert code goes here
+                alert("harus 5 digit");
+                return false;
+            }
 
             $.ajax({
                 type : "POST",
                 url  : "<?php echo site_url('voterAdmin/update')?>",
                 dataType : "JSON",
-                data : {voter_uuid:voter_uuid , voter_fullname:voter_fullname, address:address, nik:nik, passport_no:passport_no, kode_pos:kode_pos},
+                data : {voter_uuid:voter_uuid , voter_fullname:voter_fullname, address:address, nik:nik, passport_no:passport_no, kode_pos:kode_pos,validator:validator},
                 success: function(data){
                     $('[name="voter_uuid_edit"]').val("");
                     $('[name="voter_fullname_edit"]').val("");
@@ -277,7 +342,7 @@
 					$('[name="voter_paspor_edit"]').val("");
 					$('[name="voter_kodepos_edit"]').val("");
                     $('#Modal_Edit').modal('hide');
-                    show_product();
+                    location.reload();
                 }
             });
             return false;
@@ -294,11 +359,12 @@
         //delete record to database
          $('#btn_delete').on('click',function(){
             var voter_uuid = $('#voter_uuid_delete').val();
+			var validator = $('#validator_delete').val();
             $.ajax({
                 type : "POST",
                 url  : "<?php echo site_url('voterAdmin/delete')?>",
                 dataType : "JSON",
-                data : {voter_uuid:voter_uuid},
+                data : {voter_uuid:voter_uuid,validator:validator},
                 success: function(data){
                     $('[name="voter_uuid_delete"]').val("");
                     $('#Modal_Delete').modal('hide');

@@ -29,10 +29,13 @@
             </li>
                 <?php if (isset($_SESSION['user_logged'])) { ?>
             <li class="nav-item">
-                <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/verifikasiPemilih">Verifikasi Pemilih</a>
+                 <a class="nav-link" href="<?php echo base_url(); ?>voterAdmin">Verifikasi Pemilih</a>
             </li>
               <li class="nav-item">
                 <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/register">Daftarkan Pemilih</a>
+            </li>
+				<li class="nav-item">
+                <a class="nav-link" href="<?php echo base_url(); ?>subscribe">Subscriber</a>
             </li>
              <?php } ?>
         </ul>
@@ -40,7 +43,6 @@
             <div class="my-2 my-lg-0">
                 <a href="<?php echo base_url(); ?>auth/logout"><button class="btn btn-outline-success my-2 my-sm-0" type="button">Logout</button></a>
             </div>
-
             
         <?php } ?>
     </div>
@@ -62,7 +64,73 @@
             <?php echo $_SESSION['error']; ?>
         </div>
     <?php } ?>
-    <div>profil, tambah, dan update data admin</div>
+	
+   <div>Statistik aktivitas admin</div>
+	<table width="600" border="1" cellspacing="5" cellpadding="5">
+  <tr style="background:#CCC">
+    <th>No</th>
+    <th>Name</th>
+    <th>Memvalidasi data</th>
+  </tr>
+<?php
+  $i=1;
+  foreach($data as $row)
+  {
+  echo "<tr>";
+  echo "<td>".$i."</td>";
+  echo "<td>".$row->validator."</td>";
+  echo "<td>".$row->jumlah."</td>";
+  echo "</tr>";
+  $i++;
+  }
+   ?>
+   </table>
+   <hr>
+      <div>Statistik pendaftar melalui metode pemilihan</div>
+	<table width="600" border="1" cellspacing="5" cellpadding="5">
+  <tr style="background:#CCC">
+    <th>No</th>
+    <th>Metode</th>
+    <th>Jumlah</th>
+  </tr>
+<?php
+  $i=1;
+  foreach($a3 as $row)
+  {
+  echo "<tr>";
+  echo "<td>".$i."</td>";
+  echo "<td>".$row->kpps_type."</td>";
+  echo "<td>".$row->jumlah."</td>";
+  echo "</tr>";
+  $i++;
+  }
+   ?>
+   </table>
+   
+      <hr>
+      <div>Statistik pendaftar melalui metode pemilihan</div>
+	<table width="600" border="1" cellspacing="5" cellpadding="5">
+  <tr style="background:#CCC">
+    <th>No</th>
+	 <th>Daerah</th>
+    <th>Jumlah</th>
+  </tr>
+<?php
+  $i=1;
+  foreach($perkotadanmetode as $row)
+  {
+  echo "<tr>";
+  echo "<td>".$i."</td>";
+   echo "<td>".$row->city."</td>";
+  echo "<td>".$row->jumlah."</td>";
+  echo "</tr>";
+  $i++;
+  }
+   ?>
+   </table>
+   
+   
+   
 </div>
 <br>
 <div class="jumbotron">
