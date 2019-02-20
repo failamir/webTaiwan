@@ -24,9 +24,13 @@ class User extends CI_Controller {
 			$result['data']=$this->Stats_m->data_part_timer();
 			$result['a3']=$this->Stats_m->data_a3();
 			$result['perkotadanmetode']=$this->Stats_m->data_permetodedankota();
+            $this->load->view('layout/header');
             $this->load->view('admin/profile',$result);
+            $this->load->view('layout/footer');
         } else {
+            $this->load->view('layout/header');
             $this->load->view('admin/login');
+            $this->load->view('layout/footer');
         }
     }
 

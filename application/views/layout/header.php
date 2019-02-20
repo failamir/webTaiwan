@@ -36,9 +36,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="<?php echo base_url(); ?>voterAdmin">Verifikasi Pemilih</a>
             </li>
+              <?php if ($_SESSION['privilege']==9) { ?>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo base_url(); ?>unverifiedAdmin">Pemilih Bermasalah</a>
+            </li>
               <li class="nav-item">
                 <a class="nav-link" href="<?php echo base_url(); ?>voterManagement/register">Daftarkan Pemilih</a>
             </li>
+               <?php } ?>
             <li class="nav-item">
                 <a class="nav-link" href="<?php echo base_url(); ?>subscribe">Subscriber</a>
             </li>

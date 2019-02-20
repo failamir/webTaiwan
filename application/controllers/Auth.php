@@ -33,6 +33,7 @@ class Auth extends CI_Controller {
                 //set session variables
                 $_SESSION['user_logged'] = TRUE;
                 $_SESSION['username'] = $user->username;
+                $_SESSION['privilege'] = $user->privilege;
 
                 //redirect to profile page
                 redirect(base_url()."user/profile","refresh");
@@ -47,7 +48,9 @@ class Auth extends CI_Controller {
         }
 
         //load view
+        $this->load->view('layout/header');
         $this->load->view('admin/login');
+          $this->load->view('layout/footer');
     }
 
     public function logout() {
@@ -58,7 +61,7 @@ class Auth extends CI_Controller {
 
     public function register() {
 
-        if (isset($_SESSION['user_logged'])) {
+        if (isset($_SESSION['user_logged']) && ($_SESSION['privilege']==9)) {
             if (isset($_POST['register'])) {
                 $username = $_POST['username'];
                 $password = md5($_POST['password']);
@@ -80,6 +83,7 @@ class Auth extends CI_Controller {
                         'email' => $_POST['email'],
                         'password' => md5($_POST['password']),
                         'gender' => $_POST['gender'],
+                        'privilege' => $_POST['privilege'],
                         'date_created' => date("Y-m-d h:i:sa"),
                         'phone' => $_POST['phone']
                     );
@@ -99,6 +103,8 @@ class Auth extends CI_Controller {
         }
 
         //load view
+        $this->load->view('layout/header');
         $this->load->view('admin/register');
+        $this->load->view('layout/footer');
     }
 }
